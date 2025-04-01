@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tane H. Blog</title>
-    <link>//localhost:1313/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Tane H. Blog</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Tue, 01 Apr 2025 22:00:57 +1300</lastBuildDate>
-    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>blog-1</title>
-      <link>//localhost:1313/posts/blog-1/</link>
+      <link>http://localhost:1313/posts/blog-1/</link>
       <pubDate>Tue, 01 Apr 2025 22:00:57 +1300</pubDate>
-      <guid>//localhost:1313/posts/blog-1/</guid>
+      <guid>http://localhost:1313/posts/blog-1/</guid>
       <description>&lt;h1 id=&#34;welcome-to-my-blog&#34;&gt;Welcome to my blog!&lt;/h1&gt;&#xA;&lt;p&gt;This is my first post using Hugo. I&amp;rsquo;ll be talking about setting up a blog with Hugo and some of the cool things you can do with it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>blog-2</title>
-      <link>//localhost:1313/posts/blog-2/</link>
+      <link>http://localhost:1313/posts/blog-2/</link>
       <pubDate>Tue, 01 Apr 2025 22:00:57 +1300</pubDate>
-      <guid>//localhost:1313/posts/blog-2/</guid>
+      <guid>http://localhost:1313/posts/blog-2/</guid>
       <description>&lt;h1 id=&#34;welcome-to-my-blog&#34;&gt;Welcome to my blog!&lt;/h1&gt;&#xA;&lt;p&gt;This is my first post using Hugo. I&amp;rsquo;ll be talking about setting up a blog with Hugo and some of the cool things you can do with it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>//localhost:1313/cv/</link>
+      <link>http://localhost:1313/cv/</link>
       <pubDate>Tue, 01 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/cv/</guid>
+      <guid>http://localhost:1313/cv/</guid>
       <description>&lt;p&gt;This is the About Me page where I talk about my work and hobbies.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>//localhost:1313/showcase/</link>
+      <link>http://localhost:1313/showcase/</link>
       <pubDate>Tue, 01 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/showcase/</guid>
+      <guid>http://localhost:1313/showcase/</guid>
       <description>&lt;p&gt;This is the About Me page where I talk about my work and hobbies.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>//localhost:1313/writeups/</link>
+      <link>http://localhost:1313/writeups/</link>
       <pubDate>Tue, 01 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/writeups/</guid>
+      <guid>http://localhost:1313/writeups/</guid>
       <description>&lt;p&gt;This is the About Me page where I talk about my work and hobbies.&lt;/p&gt;</description>
     </item>
     <item>
       <title></title>
-      <link>//localhost:1313/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;&#xA;&lt;p&gt;Hello! I’m Tane Haines. I am 18 years old. My hobbies are programming, pen-testing, and analysing malware. In more detail, I like: writing everything from scratch(asm/c/c++), socket programming, playing CTF competitions, and writing pointess pieces of code for the sake of it. Currently I am a full-time student based in New Zealand.&lt;/p&gt;&#xA;&lt;h1 id=&#34;my-hardware&#34;&gt;My Hardware&lt;/h1&gt;&#xA;&lt;h3 id=&#34;main-devices&#34;&gt;Main Devices&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Main Computer - &amp;ldquo;MSI Katana 15&amp;rdquo;: Intel Core i7-13620H: 32GB RAM, 1TB SSD&lt;/li&gt;&#xA;&lt;li&gt;Laptop - MacBook Air (13-inch, M3, 2024)&lt;/li&gt;&#xA;&lt;li&gt;Laptop II - &amp;ldquo;Dell&amp;rdquo;: Intel Core i7-10610U: 16GB RAM, 512GB SSD&lt;/li&gt;&#xA;&lt;li&gt;Apple Iphone SE 2&lt;/li&gt;&#xA;&lt;li&gt;Apple Watch&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;raspberry-pis&#34;&gt;Raspberry PI&amp;rsquo;s&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Pi 5, 1&lt;/li&gt;&#xA;&lt;li&gt;Pi Zero, 1&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;others&#34;&gt;Others&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Intel NUC7I5BNH i5-7260U 2.2GHz, 38&lt;/li&gt;&#xA;&lt;li&gt;Wonderboom 4 Speaker: 95.3x104mm + 420g, 1&lt;/li&gt;&#xA;&lt;li&gt;HardDrive - 2TB, 1&lt;/li&gt;&#xA;&lt;li&gt;Portable Charger, 1&lt;/li&gt;&#xA;&lt;li&gt;Broken Disk Reader, 1&lt;/li&gt;&#xA;&lt;li&gt;Random Alarm Clocks, 2&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;no-i-will-not-add-a-cables-section&#34;&gt;No I will not add a cables section.&lt;/h2&gt;</description>
     </item>
   </channel>
