@@ -6,21 +6,21 @@
     <description>Recent content in Posts on Tane H. Blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 01 Apr 2025 22:00:57 +1300</lastBuildDate>
+    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>blog-1</title>
-      <link>http://localhost:1313/posts/blog-1/</link>
-      <pubDate>Tue, 01 Apr 2025 22:00:57 +1300</pubDate>
-      <guid>http://localhost:1313/posts/blog-1/</guid>
-      <description>&lt;h1 id=&#34;welcome-to-my-blog&#34;&gt;Welcome to my blog!&lt;/h1&gt;&#xA;&lt;p&gt;This is my first post using Hugo. I&amp;rsquo;ll be talking about setting up a blog with Hugo and some of the cool things you can do with it.&lt;/p&gt;</description>
+      <title>Project Wednesday</title>
+      <link>http://localhost:1313/posts/projectwednesday/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/projectwednesday/</guid>
+      <description>&lt;p&gt;Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>blog-2</title>
-      <link>http://localhost:1313/posts/blog-2/</link>
-      <pubDate>Tue, 01 Apr 2025 22:00:57 +1300</pubDate>
-      <guid>http://localhost:1313/posts/blog-2/</guid>
-      <description>&lt;h1 id=&#34;welcome-to-my-blog&#34;&gt;Welcome to my blog!&lt;/h1&gt;&#xA;&lt;p&gt;This is my first post using Hugo. I&amp;rsquo;ll be talking about setting up a blog with Hugo and some of the cool things you can do with it.&lt;/p&gt;</description>
+      <title>Startup Weekend Wellington</title>
+      <link>http://localhost:1313/posts/startupweekend/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/startupweekend/</guid>
+      <description>&lt;p&gt;This weekend I participated in the Wellington startup weekend. I came into this event, excited to create a new never-seen-before product, and ended up learning that this was not a good way to approach startups especially when the MVP is to be created in less than 2 days.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

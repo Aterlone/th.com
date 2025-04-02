@@ -64,8 +64,12 @@ pagination.pagerSize = 5
         identifier = "writeups"
         name = "Writeups"
         url = "/writeups" 
-[permalinks]
-  posts = "/posts/:slug/"
+
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      hardWraps = true
