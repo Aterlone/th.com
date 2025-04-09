@@ -6,8 +6,15 @@
     <description>Recent content on Tane H. Blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 01 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise</title>
+      <link>http://localhost:1313/posts/hackthebox/</link>
+      <pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/hackthebox/</guid>
+      <description>&lt;p&gt;This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>About Me</title>
       <link>http://localhost:1313/cv/</link>
@@ -49,6 +56,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/about/</guid>
       <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;&#xA;&lt;p&gt;Hello! I’m Tane, a Tech Nerd &amp;amp;&amp;amp; CTF Player Residing in New Zealand.&lt;/p&gt;&#xA;&lt;p&gt;I love reinventing the wheel, and learning how everything works. And yes, I do understand the importance of using existing tooling for productivity.&lt;/p&gt;&#xA;&lt;h3 id=&#34;overview-of-the-site&#34;&gt;Overview of the site&lt;/h3&gt;&#xA;&lt;p&gt;Blog Posts: Writing about events I&amp;rsquo;ve gone to, and whatever else I feel appropriate.&lt;/p&gt;&#xA;&lt;p&gt;Short CV: Non-existant.&lt;/p&gt;&#xA;&lt;p&gt;Showcase: Showing off personal projects.&lt;/p&gt;&#xA;&lt;p&gt;Writeups: Writeups for CTF Challenges + Bounties.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/writeups/app/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeups/app/</guid>
+      <description>&lt;p&gt;a&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Tane H. Blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise</title>
+      <link>http://localhost:1313/posts/hackthebox/</link>
+      <pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/hackthebox/</guid>
+      <description>&lt;p&gt;This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Project Wednesday</title>
       <link>http://localhost:1313/posts/projectwednesday/</link>

@@ -2,17 +2,17 @@
 <html lang="en">
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   
-    <title>Project Wednesday :: Tane H. Blog</title>
+    <title>Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise :: Tane H. Blog</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.
+<meta name="description" content="This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.
 " />
 <meta name="keywords" content=", " />
 
   <meta name="robots" content="noodp" />
 
-<link rel="canonical" href="http://localhost:1313/posts/projectwednesday/" />
+<link rel="canonical" href="http://localhost:1313/posts/hackthebox/" />
 
 
 
@@ -73,10 +73,10 @@
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Project Wednesday">
-<meta property="og:description" content="Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.
+<meta property="og:title" content="Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise">
+<meta property="og:description" content="This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.
 " />
-<meta property="og:url" content="http://localhost:1313/posts/projectwednesday/" />
+<meta property="og:url" content="http://localhost:1313/posts/hackthebox/" />
 <meta property="og:site_name" content="Tane H. Blog" />
 
   
@@ -87,7 +87,7 @@
 <meta property="og:image:height" content="627">
 
 
-  <meta property="article:published_time" content="2025-03-28 00:00:00 &#43;0000 UTC" />
+  <meta property="article:published_time" content="2025-04-09 00:00:00 &#43;0000 UTC" />
 
 
 
@@ -188,9 +188,9 @@
     
 <article class="post">
   <h1 class="post-title">
-    <a href="http://localhost:1313/posts/projectwednesday/">Project Wednesday</a>
+    <a href="http://localhost:1313/posts/hackthebox/">Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise</a>
   </h1>
-  <div class="post-meta"><time class="post-date">2025-03-28</time></div>
+  <div class="post-meta"><time class="post-date">2025-04-09</time></div>
 
   
     <span class="post-tags">
@@ -207,13 +207,64 @@
   
 
   <div class="post-content"><div>
-        <p>Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.</p>
-<h1 id="the-experience">The Experience<a href="#the-experience" class="hanchor" ariaLabel="Anchor">#</a> </h1>
-<p>This meetup had two talks, one about 8 points on threat analysis, and another about analytics on physical security. To be honest, I already knew all of this stuff, but it was nice talking to the crowd after the talks.</p>
-<p>Will add the topics in more detail here later</p>
-<p>Before the talks, we were fed with pizza, with the cheeze pizza being in the back. I was quite lucky with this, and got to have all of it for myself. At this event I met Skelmis and Rhys(as they work at Bastion). Accidentally called Rhys Joseph ;-;.  For reference if you see a CTF challenge, especially Cryptography, written by Joseph&hellip; Run!</p>
-<p>Was nice talking to Skelmis and Rhys.</p>
-<p>After the two talks, I was interested in how I could practice Blue Team Security, and was introduced to a few resources by one of the speakers, namely blueteamlabs and 13Cubed. I&rsquo;ll probably check these out at some point.</p>
+        <p>This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.</p>
+<h2 id="my-disorganised-notes">My disorganised notes.<a href="#my-disorganised-notes" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>God Account:<br>
+giving user god access makes use password everywhere and when attacker leaks gets pass for everywhere</p>
+<p>Wide open storage:<br>
+Confidential files on windows fileshre anyone in company can access cuz ACL, attacker compromise user laptop reverse control mechanism neeeded. Gigabytes of data need to be exfiltrated so often gets noticed.</p>
+<p>S3 bucket:<br>
+S3 bucket left open and listable by anonymous because lots of settings and hard.<br>
+Attacker bulk harvest<br>
+Isn&rsquo;t detected because object level logging is an optional upgrade</p>
+<p>Blast radius of mistakes<br>
+OnPrem mistakes are limited to what the compr resource can access, restricted by design.<br>
+Clouds benefit work against it when compromised - convenient single GUI for all resources, single user can have ultimate power.<br>
+Public access by default makes large scale compromise simpler.</p>
+<p>On-Prem - hard outer shell<br>
+Missed</p>
+<p>Cloud - Identity is the new perimeter<br>
+all action start with a login<br>
+resrouces accessible by default<br>
+need to think of every resource as it&rsquo;s own sec problem</p>
+<p>Considerations<br>
+Blast radius of each mistake<br>
+start secure and loosen as you go(least-priov)<br>
+security starts during design - don&rsquo;t fall into the trap of assuming you can secure it before go live<br>
+each resource type brings new threats<br>
+Other stuff</p>
+<p>Designing access control<br>
+never assign AdminAccess<br>
+AWS perms are based on action + target, minimize at least 1 of these, if not both (ex: s3* but limited to a single bucket)<br>
+treat your permissions / role definitions as code, make sure you track changes<br>
+Regularly revisit! access creep is a big thing</p>
+<p>Designing audit<br>
+Keep logs of everythign easy but costs<br>
+estab how long you need for<br>
+test the logs<br>
+consider the full stack</p>
+<p>Designing the secrets<br>
+Handling secrets in cloud is more ez than on-prem<br>
+secrets manager can be used just about everywhere<br>
+code can easily be transported between environments even on prem<br>
+again need</p>
+<p>tips for aws<br>
+Set a budget<br>
+Turn on cloudtrail audit mod<br>
+Create user with limited perms<br>
+create s3 bucket that allows limit<br>
+EC2 instance not on internet<br>
+Static weba pp hosted in s3 bucket, with cloudfront in front of it, without exposing S3.</p>
+<p>Stakes in cloud are different to not cloud so be weary.</p>
+<h2 id="lab-machine">Lab Machine<a href="#lab-machine" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Today we didn&rsquo;t actually get to hack a retired HTB machine because of something HTB did?</p>
+<p>So we played one of the online machines called &ldquo;Dog&rdquo;.</p>
+<p>The user solution is to get a user and password using the file in the github on the website. We can use a cve to get a remote shell on the website. After this we can find the user and use the same password.</p>
+<p>For the root, we run sudo -l to find a command we can run and then use it to run a php script and get /root/root.txt.</p>
+<p>Very easy challenge, if it didn&rsquo;t keep giving me the weirdest errors which weren&rsquo;t even my fault ;-;.</p>
+<h2 id="the-event">The Event<a href="#the-event" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The event was quite fun. Met some friends and got to talk to them and ate lots of pizza.</p>
+<p>It&rsquo;s unfortunate that I had an exam at the start because I finished some of the talk, but I completed the exam in under 30 minutes so I got to be there for basically the whole thing.</p>
       </div></div>
 
   
@@ -225,16 +276,10 @@
   </div>
   <div class="pagination__buttons">
     
-      <a href="http://localhost:1313/posts/hackthebox/" class="button inline prev">
-        &lt; [<span class="button__text">Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise</span>]
-      </a>
     
     
-      ::
-    
-    
-      <a href="http://localhost:1313/posts/startupweekend/" class="button inline next">
-         [<span class="button__text">Startup Weekend Wellington</span>] &gt;
+      <a href="http://localhost:1313/posts/projectwednesday/" class="button inline next">
+         [<span class="button__text">Project Wednesday</span>] &gt;
       </a>
     
   </div>
