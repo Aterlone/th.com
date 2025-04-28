@@ -16,3 +16,5 @@ This is a blog on the Cyber Gamified event by Brock Roderick. He works at Educat
 <!--more-->
 
 They displayed the many different games they've made, and then showed us their card game Cyber Attack Chain. We played a mini tournament where I won the first round and got a pack of cards for free. After I asked if he would be willing to help a bit with VUWGCTF which is a competition my team will run in the future.
+
+I meat eth7turbo and balanced there. Also a few other people I knew.
