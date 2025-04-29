@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://tanehaines.com/posts/</loc>
+    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/posts/masseygamejam/</loc>
+    <loc>http://localhost:1313/posts/masseygamejam/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/posts/cybergamified/</loc>
+    <loc>http://localhost:1313/posts/cybergamified/</loc>
     <lastmod>2025-04-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/posts/hackthebox/</loc>
+    <loc>http://localhost:1313/posts/hackthebox/</loc>
     <lastmod>2025-04-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/cv/</loc>
+    <loc>http://localhost:1313/cv/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/showcase/</loc>
+    <loc>http://localhost:1313/showcase/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/writeups/</loc>
+    <loc>http://localhost:1313/writeups/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/posts/projectwednesday/</loc>
+    <loc>http://localhost:1313/posts/projectwednesday/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/posts/startupweekend/</loc>
+    <loc>http://localhost:1313/posts/startupweekend/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://tanehaines.com/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
   </url><url>
-    <loc>http://tanehaines.com/projects/project-1/</loc>
+    <loc>http://localhost:1313/projects/project-1/</loc>
   </url><url>
-    <loc>http://tanehaines.com/writeups/app/</loc>
+    <loc>http://localhost:1313/writeups/app/</loc>
   </url><url>
-    <loc>http://tanehaines.com/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>http://tanehaines.com/projects/</loc>
+    <loc>http://localhost:1313/projects/</loc>
   </url><url>
-    <loc>http://tanehaines.com/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
   </url>
 </urlset>

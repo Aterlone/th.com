@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Projects on Tane H. Blog</title>
-    <link>http://tanehaines.com/projects/</link>
+    <link>http://localhost:1313/projects/</link>
     <description>Recent content in Projects on Tane H. Blog</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <atom:link href="http://tanehaines.com/projects/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>http://tanehaines.com/projects/project-1/</link>
+      <link>http://localhost:1313/projects/project-1/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://tanehaines.com/projects/project-1/</guid>
+      <guid>http://localhost:1313/projects/project-1/</guid>
       <description></description>
     </item>
   </channel>
