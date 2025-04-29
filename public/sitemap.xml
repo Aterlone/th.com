@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/masseygamejam/</loc>
+    <loc>http://localhost:52254/posts/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>http://localhost:52254/posts/masseygamejam/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>http://localhost:52254/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/cybergamified/</loc>
+    <loc>http://localhost:52254/posts/cybergamified/</loc>
     <lastmod>2025-04-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/hackthebox/</loc>
+    <loc>http://localhost:52254/posts/hackthebox/</loc>
     <lastmod>2025-04-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cv/</loc>
+    <loc>http://localhost:52254/cv/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/showcase/</loc>
+    <loc>http://localhost:52254/showcase/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/writeups/</loc>
+    <loc>http://localhost:52254/writeups/</loc>
     <lastmod>2025-04-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/projectwednesday/</loc>
+    <loc>http://localhost:52254/posts/projectwednesday/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/startupweekend/</loc>
+    <loc>http://localhost:52254/posts/startupweekend/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>http://localhost:52254/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/writeups/app/</loc>
+    <loc>http://localhost:52254/projects/project-1/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>http://localhost:52254/writeups/app/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>http://localhost:52254/categories/</loc>
+  </url><url>
+    <loc>http://localhost:52254/projects/</loc>
+  </url><url>
+    <loc>http://localhost:52254/tags/</loc>
   </url>
 </urlset>
