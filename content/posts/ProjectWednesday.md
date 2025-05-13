@@ -1,7 +1,7 @@
 +++
 title = "Project Wednesday"
 date = "2025-03-28"
-author = ""
+author = "Tane Haines"
 cover = ""
 tags = ["", ""]
 keywords = ["", ""]

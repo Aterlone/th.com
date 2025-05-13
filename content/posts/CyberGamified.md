@@ -1,7 +1,7 @@
 +++
 title = "Cyber Gamified - Brock Roderick"
 date = "2025-04-22"
-author = ""
+author = "Tane Haines"
 cover = ""
 tags = ["", ""]
 keywords = ["", ""]

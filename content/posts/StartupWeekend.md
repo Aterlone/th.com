@@ -1,7 +1,7 @@
 +++
 title = "Startup Weekend Wellington"
 date = "2025-03-28"
-author = ""
+author = "Tane Haines"
 cover = ""
 tags = ["", ""]
 keywords = ["", ""]

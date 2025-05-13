@@ -1,7 +1,7 @@
 +++
 title = "Sanderson - Massey Game Jam"
 date = "2025-04-23"
-author = ""
+author = "Tane Haines"
 cover = ""
 tags = ["", ""]
 keywords = ["", ""]

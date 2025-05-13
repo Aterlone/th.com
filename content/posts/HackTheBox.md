@@ -1,7 +1,7 @@
 +++
 title = "Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise"
 date = "2025-04-09"
-author = ""
+author = "Tane Haines"
 cover = ""
 tags = ["", ""]
 keywords = ["", ""]
