@@ -1,15 +1,15 @@
-+++
-title = "Project Wednesday"
-date = "2025-04-25"
-author = "Tane Haines"
-cover = ""
-tags = ["", ""]
-keywords = ["", ""]
-description = ""
-showFullContent = false
-readingTime = false
-hideComments = false
-+++
+---
+title: "Project Wednesday"
+date: 2025-04-25
+author: "Tane Haines"
+cover: ""
+tags: []
+keywords: []
+description: ""
+showFullContent: false
+readingTime: false
+hideComments: false
+---
 
 Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.
 
