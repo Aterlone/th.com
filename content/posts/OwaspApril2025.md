@@ -1,6 +1,6 @@
 +++
 title = "Owasp Talk - April 2025"
-date = "2025-04-31"
+date = "2025-04-30"
 author = "Tane Haines"
 cover = ""
 tags = ["", ""]
@@ -12,6 +12,7 @@ hideComments = false
 +++
 
 This is a blog on a meetup by the local OWASP chapter in wellington.
+
 <!--more-->
 
 # Local OWASP Talk Recap
@@ -30,15 +31,14 @@ The keynote was delivered by **\[Matt Cotterell]**
 
 ### Key Points from the Talk
 
-* **\[History of Logins]:** This was just a history of all the login systems we've used from the beginning of web. I don't really want to go over this in depth. (I don't remember it very well anymore.)
-* **\[A one click login system]:** A one click login system, using password managers through the browser.
+- **\[History of Logins]:** This was just a history of all the login systems we've used from the beginning of web. I don't really want to go over this in depth. (I don't remember it very well anymore.)
+- **\[A one click login system]:** A one click login system, using password managers through the browser.
 
 ---
 
 ## Live Demonstration
 
-One of the most captivating parts of the talk was the live demonstration of **\[A theoreticle one click/zero click login]**. The speaker showcased a secure way which a webapp could communicate with website to log the user in using a password manager. I could be wrong but what I understood was that, the idea is that you first send a simple Login message to the server. It then communicates to the password mananger to see if there is a login for the page, gets the user and password and you are logged in. This means that all the website will do is prompt the password manager on login without having to fill out any fields. This will be very useful as often you need to fill out these fields everytime you go to a different app or need to swap accounts on an app or something. It was put in more depth in the talk, but this was a while ago so I don't remember it very well anymore.
----
+## One of the most captivating parts of the talk was the live demonstration of **\[A theoreticle one click/zero click login]**. The speaker showcased a secure way which a webapp could communicate with website to log the user in using a password manager. I could be wrong but what I understood was that, the idea is that you first send a simple Login message to the server. It then communicates to the password mananger to see if there is a login for the page, gets the user and password and you are logged in. This means that all the website will do is prompt the password manager on login without having to fill out any fields. This will be very useful as often you need to fill out these fields everytime you go to a different app or need to swap accounts on an app or something. It was put in more depth in the talk, but this was a while ago so I don't remember it very well anymore.
 
 ## Final thoughts.
 
