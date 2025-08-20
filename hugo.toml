@@ -1,4 +1,4 @@
-baseurl = "http://tanehaines.com/"
+baseurl = "https://www.tanehaines.com/"
 languageCode = "en-us"
 theme = "terminal"
 pagination.pagerSize = 5
