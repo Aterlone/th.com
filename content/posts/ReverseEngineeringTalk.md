@@ -11,7 +11,7 @@ readingTime = false
 hideComments = false
 +++
 
-Yes, I did my first talk, in front of dozens of people. It was on reverse engineering. It was for VuwCTF the Cyber Security Club at Vic Uni
+Yes, I did my first talk, in front of dozens of people. It was on reverse engineering. It was for VuwCTF the Cyber Security Club at VUW.
 
 <!--more-->
 
