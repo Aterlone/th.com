@@ -30,4 +30,4 @@ One thing I'm happy about is that a few high schoolers came and learned about RE
 ## What I learned from this
 We may need more people in future events. We had all our committee members and it was hard to get around to everyone to help... I hope this doesn't become an issue in our next event(forshadowing).
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=yfgw-K0gaqs&t=12s" frameborder="0" allowfullscreen></iframe>
+https://www.youtube.com/watch?v=yfgw-K0gaqs&t=12s
