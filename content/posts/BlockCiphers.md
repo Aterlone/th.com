@@ -1,5 +1,5 @@
 +++
-title = "Coorporate Network Pentesting, Logan Woods"
+title = "Block Cipher Learning on the Plane - Part 1"
 date = "2025-08-31"
 author = "Tane Haines"
 cover = ""
@@ -71,7 +71,9 @@ So, what about the first ciphertext value used in the xor. This is what the IV(I
 I read about this, but at this point I was getting ready to go to sleep so I wasn't too sure. Effectively though, it's space efficient, and you can use it for encryption and decryption unlike the other two modes I mentioned which you need different functions for.
 
 ### What it took you 11+ hours to understand this? 
-To this I will say no. I slept for 5-6 hours, was helping an old man next to me crumbling under air pressure, and doing my weekend CTF challenges as a side quest.
+To this I will say no. I slept for 5-6 hours, was helping an old man next to me crumbling under air pressure, and doing my weekend CTF challenges as a side quest. 
+
+Also yes I have learned more, this is just part one because I am writing this at night.
 
 ### How do I find the article
 For people who want to check the article out [click here!](https://eprint.iacr.org/2020/1545)
