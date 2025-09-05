@@ -14,9 +14,3 @@ My favorite xkcd meme is [Physics Cost-Saving Tips](https://xkcd.com/2649/).
 
 ### Overview of the site
 Blog Posts: Writing about events I've gone to, and whatever else I feel appropriate.
-
-Short CV: Non-existant.
-
-Showcase: Showing off personal projects.
-
-Writeups: Writeups for CTF Challenges + Bounties.
