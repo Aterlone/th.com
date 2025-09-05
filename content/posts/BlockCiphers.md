@@ -1,5 +1,5 @@
 +++
-title = "Block Cipher Learning on the Plane - Part 1"
+title = "Block Ciphers - Part 1"
 date = "2025-08-31"
 author = "Tane Haines"
 cover = ""
@@ -18,7 +18,7 @@ One day a man named Tane was bored in a plane with Wifi. What did he do? He read
 So yeah, I was in a plane today going home and was just reading on block ciphers with the intent to learn blockchain hacking. For those not well adversed in hacking, NO I AM NOT GOING TO USE THIS WITH ILL INTENT. Anyway with the disclaimer done, let's get right in.
 
 
-So I'm going to use this website as an opportunity to explain what I learned while on the place. I will cover ECB(Electronic Code Book), CBC(Cipher Block Chaining), and a tiny bit of CTR(Counter Mode) which I didn't understand fully.
+So I'm going to use this website as an opportunity to explain what I learned while on the plane. I will cover ECB(Electronic Code Book), CBC(Cipher Block Chaining), and a tiny bit of CTR(Counter Mode) which I didn't understand very well.
 
 
 # The content
@@ -45,7 +45,7 @@ This had been a great mystery for me until today. It's the initialization vector
 A SPM, or Substitution-Permutation Cipher is the fundemental design structure for the ciphers such as aes.
 
 ## What's a S-Box
-It's a box with multiple operations to encrypt/decrypt the input.
+It's a box with multiple operations to encrypt/decrypt the input with a key.
 
 ## What is Electronic Codebook, ECB
 ECB has a separate encryption process to decryption, but honestly, it's just reversing it. Takes up more space though.
