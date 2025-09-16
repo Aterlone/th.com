@@ -1,0 +1,42 @@
+<!-- Extended footer section with RSS feed link -->
+<div class="footer__rss">
+  <a href="{{ .Site.Home.RelPermalink }}index.xml" title="Subscribe to RSS Feed" target="_blank">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M2.002 2.002a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-8zm1.5 0a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-8z"/>
+      <path d="M4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+      <path d="M4.5 10a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+      <path d="M4.5 14a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+    </svg>
+    RSS Feed
+  </a>
+</div>
+
+<style>
+.footer__rss {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.footer__rss a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.footer__rss a:hover {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.footer__rss svg {
+  width: 16px;
+  height: 16px;
+}
+</style>

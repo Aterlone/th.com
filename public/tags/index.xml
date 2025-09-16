@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on Tane H. Blog</title>
+    <link>http://localhost:1313/tags/</link>
+    <description></description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 05 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Malware</title>
+      <link>http://localhost:1313/tags/malware/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/malware/</guid>
+      <description></description>
+      <content:encoded></content:encoded>
+    </item>
+    
+    <item>
+      <title>Nodejs</title>
+      <link>http://localhost:1313/tags/nodejs/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/nodejs/</guid>
+      <description></description>
+      <content:encoded></content:encoded>
+    </item>
+    
+    <item>
+      <title>Nx</title>
+      <link>http://localhost:1313/tags/nx/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/nx/</guid>
+      <description></description>
+      <content:encoded></content:encoded>
+    </item>
+    
+    <item>
+      <title>Supply-Chain</title>
+      <link>http://localhost:1313/tags/supply-chain/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/supply-chain/</guid>
+      <description></description>
+      <content:encoded></content:encoded>
+    </item>
+    
+    <item>
+      <title>Threat-Intelligence</title>
+      <link>http://localhost:1313/tags/threat-intelligence/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/threat-intelligence/</guid>
+      <description></description>
+      <content:encoded></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

