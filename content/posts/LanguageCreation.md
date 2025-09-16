@@ -1,13 +1,12 @@
 +++
 title = "The Art and Science of Language Creation"
-date = "2024-09-15"
+date = "2025-09-15"
 author = "Tane Haines"
 cover = ""
 tags = ["programming", "damp"]
 keywords = ["constructed languages", "damp"]
-description = "Exploring the fascinating world of constructed languages, from artistic conlangs to programming languages, and what we can learn from the process of language creation."
 showFullContent = false
-readingTime = false
+readingTime = true
 hideComments = false
 +++
 
