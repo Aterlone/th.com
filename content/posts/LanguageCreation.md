@@ -1,5 +1,5 @@
 +++
-title = "The Art and Science of Language Creation"
+title = "Creating a Turing Complete Programming Language"
 date = "2025-09-15"
 author = "Tane Haines"
 cover = ""
