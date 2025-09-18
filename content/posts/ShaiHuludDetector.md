@@ -47,12 +47,9 @@ I haven't really seen any proper tools for Shai-Hulud prevention despite it bein
 
 ## How to Use It
 
-Just run:
+Run:
+python3 check_bundle_size.py
 
-python check_bundle_size.py
-
-yaml
-Copy code
 
 - First time, it asks for your bundle path.  
 - Then it checks for size changes, token prefixes, and network calls.  
@@ -83,10 +80,10 @@ Suspicious network calls found: fetch
 
 ## Takeaway
 
-We really need small and simple scripts in our gh directories which scan for malicious packages. It's quick to make and can prevent a lot of chaos... this is to you CEO's LOW COST FOR PRODUCT PROTECTION.
+We really need small and simple scripts in our gh directories which scan for malicious packages. It's quick to make and can prevent a lot of chaos... this is to you 
+**CEO's: LOW COST + HIGH SECURITY** :0.
 
 Anyway, please use my tool or create your own threat detection tools. I'd love some PR's which include changes/suggestions to improve my tool. 
 https://github.com/TaneHaines/shai-hulud-detector
 
 Make sure to star it so more people know about it!
-
