@@ -13,6 +13,8 @@ hideComments = false
 
 I made a small Python script to check JavaScript bundles for suspicious stuff, especially things that malware like **Shai-Hulud** might try to do. Thought I’d share a bit about it.
 
+Here's the github in case you are interested: [Cick Here](https://github.com/TaneHaines/shai-hulud-detector)
+
 <!--more-->
 
 # Shai-Hulud Bundle Scanner
